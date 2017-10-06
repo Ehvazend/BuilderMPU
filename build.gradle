@@ -1,0 +1,40 @@
+group 'net.ehvazend.mpu'
+version 'Dev'
+
+buildscript {
+    ext.kotlin_version = '1.1.50'
+
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+    }
+}
+
+apply plugin: 'kotlin'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    // Kotlin runtime
+    compile "org.jetbrains.kotlin:kotlin-stdlib-jre8:$kotlin_version"
+
+    // JUnit Jupiter API and TestEngine implementation
+    def junitJupiterVersion = '5.0.0'
+    testCompile "org.junit.jupiter:junit-jupiter-api:$junitJupiterVersion"
+    testRuntime "org.junit.jupiter:junit-jupiter-engine:$junitJupiterVersion"
+
+    // Other libs
+    compile "com.typesafe:config:1.3.1"
+    compile 'org.jsoup:jsoup:1.10.3'
+}
+
+compileKotlin {
+    kotlinOptions.jvmTarget = "1.8"
+}
+compileTestKotlin {
+    kotlinOptions.jvmTarget = "1.8"
+}
