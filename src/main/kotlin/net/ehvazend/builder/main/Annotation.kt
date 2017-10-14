@@ -2,8 +2,12 @@ package net.ehvazend.builder.main
 
 import javafx.fxml.FXML
 import javafx.scene.layout.Pane
+import javafx.scene.shape.Rectangle
 
 open class Annotation {
     @FXML
-    var root = Pane()
+    protected var root = Pane()
+
+    @FXML
+    protected var rootRectangle = Rectangle()
 }
