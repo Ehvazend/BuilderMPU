@@ -1,0 +1,11 @@
+@font-face {
+    src: url(Main.otf);
+}
+
+* {
+    -fx-background-radius: 0;
+    -fx-background-insets: 0;
+    -fx-border-insets: 0;
+    -fx-font-family: 'Minecraft';
+    -fx-font-smoothing-type: lcd;
+}
