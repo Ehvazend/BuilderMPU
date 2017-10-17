@@ -21,7 +21,7 @@ class Main : Application() {
             it.location = javaClass.getResource("/assets/Main.fxml")
 
             // Set scene
-            mainStage.scene = Scene(it.load(), 590.0, 240.0)
+            mainStage.scene = Scene(it.load())
 
             // Scene parameters
             mainStage.isResizable = false
