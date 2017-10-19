@@ -1,4 +1,4 @@
-package net.ehvazend.builder.animation
+package net.ehvazend.builder.filesystem
 
 import javafx.fxml.FXMLLoader
 import net.ehvazend.builder.Main
