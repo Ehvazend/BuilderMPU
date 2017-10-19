@@ -2,23 +2,20 @@ package net.ehvazend.builder.main
 
 import javafx.fxml.Initializable
 import javafx.scene.effect.ColorAdjust
-import javafx.scene.layout.VBox
 import net.ehvazend.builder.animation.Animation.timeline
-import net.ehvazend.builder.animation.getRoot
 import java.net.URL
 import java.util.*
 
 class Controller : Logic(), Initializable {
     override fun initialize(location: URL, resources: ResourceBundle?) {
-        // Fill data
+        // Fill Data
         init()
+        load()
 
-        // Load Init.fxml
-        Data.initPanel = getRoot<VBox>("/assets/main/Init.fxml")
+        Data.root.children.also { println(it) }
 
         // Set Init.fxml
-        Data.root.children += Data.initPanel
-        Data.currentPanel = Data.initPanel
+        Data.currentPanel = Data.initPanel.init()
 
         // Set effect
         Data.initPanel.also {
