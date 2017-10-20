@@ -1,11 +1,9 @@
 package net.ehvazend.builder.animation
 
-import javafx.animation.Interpolator
-import javafx.animation.Interpolator.LINEAR
-import javafx.animation.KeyFrame
-import javafx.animation.KeyValue
-import javafx.animation.Timeline
+import javafx.animation.*
+import javafx.animation.Interpolator.*
 import javafx.beans.property.Property
+import javafx.scene.Node
 import javafx.util.Duration
 
 object Animation {
@@ -18,6 +16,19 @@ object Animation {
             it.cycleCount = cycleCount
 
             return it.also(Timeline::play)
+        }
+    }
+
+    fun Node.translate(side: Slider.Side, duration: Double = .75, interpolator: Interpolator = SPLINE(1.0, 0.2, 0.2, 1.0)) {
+        TranslateTransition().also {
+            it.node = this
+            it.duration = Duration.seconds(duration)
+            it.interpolator = interpolator
+
+            it.toX = -side.x
+            it.toY = -side.y
+
+            it.play()
         }
     }
 }
