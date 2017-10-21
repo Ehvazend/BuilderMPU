@@ -12,8 +12,6 @@ class Controller : Logic(), Initializable {
         init()
         load()
 
-        Data.root.children.also { println(it) }
-
         // Set Init.fxml
         Data.currentPanel = Data.initPanel.init()
 
