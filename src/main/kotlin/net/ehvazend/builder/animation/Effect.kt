@@ -6,7 +6,7 @@ import javafx.beans.property.Property
 import javafx.scene.Node
 import javafx.util.Duration
 
-object Animation {
+object Effect {
     // Extension Function for Property
     fun <T> Property<T>.timeline(toValue: T, duration: Double, interpolator: Interpolator = LINEAR, cycleCount: Int = 0): Timeline {
         val keyValue = KeyValue(this, toValue, interpolator)
