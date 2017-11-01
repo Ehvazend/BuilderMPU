@@ -1,4 +1,4 @@
-package net.ehvazend.builder.animation
+package net.ehvazend.builder
 
 import javafx.animation.*
 import javafx.animation.Interpolator.*
@@ -25,6 +25,19 @@ object Effect {
             // Start moving newNode
             newNode.translate(side)
         }
+
+        fun Node.translate(side: Slider.Side, duration: Double = .75, interpolator: Interpolator = SPLINE(1.0, 0.2, 0.2, 1.0)) {
+            TranslateTransition().also {
+                it.node = this
+                it.duration = Duration.seconds(duration)
+                it.interpolator = interpolator
+
+                it.toX = -side.x
+                it.toY = -side.y
+
+                it.play()
+            }
+        }
     }
 
     // Extension Function for Property
@@ -36,19 +49,6 @@ object Effect {
             it.cycleCount = cycleCount
 
             return it.also(Timeline::play)
-        }
-    }
-
-    fun Node.translate(side: Slider.Side, duration: Double = .75, interpolator: Interpolator = SPLINE(1.0, 0.2, 0.2, 1.0)) {
-        TranslateTransition().also {
-            it.node = this
-            it.duration = Duration.seconds(duration)
-            it.interpolator = interpolator
-
-            it.toX = -side.x
-            it.toY = -side.y
-
-            it.play()
         }
     }
 }
