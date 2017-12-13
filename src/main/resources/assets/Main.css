@@ -9,3 +9,7 @@
     -fx-font-family: 'Minecraft';
     -fx-font-smoothing-type: lcd;
 }
+
+.button {
+    -fx-cursor: HAND;
+}

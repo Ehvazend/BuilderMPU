@@ -9,7 +9,7 @@ apply plugin: 'kotlin'
     def jvmTarget = "1.8"
 
     // Main class
-    def mainClass = 'Main'
+    def mainClass = 'net.ehvazend.builder.Main'
 
     // Version of lib
     def kotlin = '1.2.0'
@@ -35,7 +35,7 @@ repositories {
 dependencies {
     // Kotlin runtime and reflect
     compile "org.jetbrains.kotlin:kotlin-stdlib-jre8:$kotlin"
-    compile "org.jetbrains.kotlin:kotlin-reflect:$kotlin"
+//    compile "org.jetbrains.kotlin:kotlin-reflect:$kotlin"
 
     // JUnit Jupiter API and TestEngine implementation
     testCompile "org.junit.jupiter:junit-jupiter-api:$junitJupiter"

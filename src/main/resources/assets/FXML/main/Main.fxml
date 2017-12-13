@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.effect.ColorAdjust?>
+<?import javafx.scene.effect.Glow?>
+<?import javafx.scene.effect.InnerShadow?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.paint.LinearGradient?>
+<?import javafx.scene.paint.Stop?>
+<?import javafx.scene.shape.Rectangle?>
+<AnchorPane fx:id="root" minHeight="-Infinity" minWidth="-Infinity" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="net.ehvazend.builder.performance.root.Controller">
+    <Rectangle fx:id="rootRectangle" arcHeight="5.0" disable="true" height="52.0" stroke="TRANSPARENT" strokeType="INSIDE" strokeWidth="0.0" width="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <fill>
+          <LinearGradient>
+              <stops>
+                  <Stop color="#4377a8" />
+                  <Stop color="#42285b" offset="1.0" />
+              </stops>
+          </LinearGradient>
+        </fill>
+        <effect>
+          <ColorAdjust brightness="0.25" hue="-1.0" saturation="0.25">
+            <input>
+               <Glow level="1.0">
+                  <input>
+                     <InnerShadow choke="1.0" color="#0000001a" height="0.0" offsetY="2.0" radius="0.0" width="0.0" />
+                  </input>
+               </Glow>
+            </input>
+         </ColorAdjust>
+        </effect>
+    </Rectangle>
+   <AnchorPane fx:id="content">
+      <children>
+         <Pane fx:id="body" layoutX="14.0" layoutY="37.0" prefWidth="572.0" />
+         <AnchorPane layoutX="14.0" minWidth="572.0" pickOnBounds="false">
+            <children>
+               <Pane fx:id="header" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0" />
+               <HBox spacing="14.0" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                  <children>
+                     <Button fx:id="backButton" disable="true" mnemonicParsing="false" text="Back" />
+                     <Button fx:id="nextButton" mnemonicParsing="false" text="Next" />
+                  </children>
+               </HBox>
+            </children>
+         </AnchorPane>
+      </children>
+   </AnchorPane>
+</AnchorPane>

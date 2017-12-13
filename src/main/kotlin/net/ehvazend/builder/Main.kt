@@ -6,6 +6,7 @@ import javafx.scene.Scene
 import javafx.scene.image.Image
 import javafx.stage.Stage
 import net.ehvazend.builder.Main.DataApplication.*
+import net.ehvazend.builder.performance.Data
 
 class Main : Application() {
     enum class DataApplication(val get: String) {
@@ -14,22 +15,31 @@ class Main : Application() {
         TITLE("MPU: Builder")
     }
 
+    fun initStage(stage: Stage) {
+        Data.stage = stage
+    }
+
     override fun start(mainStage: Stage) {
+        // Save stage in Data
+        initStage(mainStage)
+
         // Main.fxml load
         FXMLLoader().also {
             // Load resource
-            it.location = javaClass.getResource("/assets/Main.fxml")
+            it.location = javaClass.getResource("/assets/FXML/main/Main.fxml")
 
             // Set scene
             mainStage.scene = Scene(it.load())
 
             // Scene parameters
-            mainStage.isResizable = false
-            mainStage.scene.stylesheets += javaClass.getResource(STYLE.get).toExternalForm()
-            mainStage.icons += Image(javaClass.getResourceAsStream(LOGO.get))
-            mainStage.title = TITLE.get
+            mainStage.also {
+                it.isResizable = false
+                it.scene.stylesheets += javaClass.getResource(STYLE.get).toExternalForm()
+                it.icons += Image(javaClass.getResourceAsStream(LOGO.get))
+                it.title = TITLE.get
+            }
 
-            // Run
+            // Launching
             mainStage.show()
         }
     }
