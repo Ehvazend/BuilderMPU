@@ -48,19 +48,12 @@ object Init : Panel {
     private lateinit var loadButton: Button
 
     override val body: Pane by lazy {
-        Pane().also {
-            it.id = "bodyInit"
-
-            it.children += create.body
-            it.children += load.body
-        }
+        fillBody(create, load)
     }
-
-    override lateinit var currentSlide: Slide
 
     private val create: Slide by lazy {
         object : Slide {
-            override val body = getRoot<VBox>("/assets/FXML/init/Create.fxml").also {
+            override val slide = getRoot<VBox>("/assets/FXML/init/Create.fxml").also {
                 (it.children.first() as HBox).children.forEach {
                     if (it.id == "chooseDirectory") (it as Button).setOnAction {
                         DirectoryChooser().showDialog(Stage())
@@ -72,7 +65,7 @@ object Init : Panel {
 
     private val load: Slide by lazy {
         object : Slide {
-            override val body = getRoot<VBox>("/assets/FXML/init/Load.fxml").also {
+            override val slide = getRoot<VBox>("/assets/FXML/init/Load.fxml").also {
                 it.opacity = 0.0
                 it.isMouseTransparent = true
 

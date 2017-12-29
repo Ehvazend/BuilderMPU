@@ -1,8 +1,13 @@
 package net.ehvazend.builder.performance.interfaces
 
 import javafx.scene.Node
+import javafx.scene.layout.Pane
 
-interface Panel : Slide {
+interface Panel {
     val header: Node
-    var currentSlide: Slide
+    val body: Node
+
+    fun fillBody(vararg slides: Slide) = Pane().also { pane ->
+        slides.forEach { pane.children += it.slide }
+    }
 }

@@ -92,12 +92,12 @@ object ContentHandler {
     private fun slideStep(slides: Pair<Slide, Slide>, direction: Direction) {
         val (newSlide, oldSlide) = slides
 
-        oldSlide.body.also {
+        oldSlide.slide.also {
             it.disappearance(Data.Config.duration)
             it.layoutYProperty().timeline(0.0 to direction.y, Data.Config.duration, AnimationHandler.Add(Data.Config.interpolator))
         }
 
-        newSlide.body.also {
+        newSlide.slide.also {
             it.appearance(Data.Config.duration)
             it.layoutYProperty().timeline(-direction.y to 0.0, Data.Config.duration, AnimationHandler.Add(Data.Config.interpolator))
         }
