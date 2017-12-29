@@ -11,9 +11,9 @@ import net.ehvazend.builder.performance.handlers.AnimationHandler.timeline
 import net.ehvazend.builder.performance.interfaces.Slide
 
 object ContentHandler {
-    data class Content(val header: Node, val body: Node) {}
+    data class Content(val header: Node, val body: Node)
 
-    fun loadContent(panel: Data.Panels): Content {
+    private fun loadContent(panel: Data.Panels): Content {
         fun loadHeader(panel: Data.Panels) = panel.header.also {
             Data.headerContainer.children += it
         }
@@ -82,11 +82,11 @@ object ContentHandler {
     }
 
     // Slide zone ------------------------------
-    enum class Direction(val x: Double = 0.0, val y: Double = 0.0) {
-        TOP(y = -Data.stage.scene.height),
-        RIGHT(x = Data.stage.scene.width),
-        BOTTOM(y = Data.stage.scene.height),
-        LEFT(x = -Data.stage.scene.width)
+    sealed class Direction(val x: Double = 0.0, val y: Double = 0.0) {
+        object TOP : Direction(y = -Data.stage.scene.height)
+        object RIGHT : Direction(x = Data.stage.scene.width)
+        object BOTTOM : Direction(y = Data.stage.scene.height)
+        object LEFT : Direction(x = -Data.stage.scene.width)
     }
 
     private fun slideStep(slides: Pair<Slide, Slide>, direction: Direction) {
@@ -103,8 +103,8 @@ object ContentHandler {
         }
     }
 
-    fun slideNext(slides: Pair<Slide, Slide>) = slideStep(slides, ContentHandler.Direction.BOTTOM)
-    fun slideBack(slides: Pair<Slide, Slide>) = slideStep(slides, ContentHandler.Direction.TOP)
+    fun slideNext(slides: Pair<Slide, Slide>) = slideStep(slides, Direction.BOTTOM)
+    fun slideBack(slides: Pair<Slide, Slide>) = slideStep(slides, Direction.TOP)
 
 
     private fun panelStep(panels: Pair<Data.Panels, Data.Panels>, direction: Direction) {
@@ -134,7 +134,7 @@ object ContentHandler {
         newPanel.body.layoutXProperty().timeline(-direction.x to 0.0, Data.Config.duration, AnimationHandler.Add(Data.Config.interpolator))
     }
 
-    fun panelNext() {
+    private fun panelNext() {
         Data.Panels.values().also {
             if (it.indexOf(Data.currentPanel) != it.lastIndex) {
                 panelStep(it[it.indexOf(Data.currentPanel) + 1] to Data.currentPanel!!, Direction.LEFT)
@@ -142,7 +142,7 @@ object ContentHandler {
         }
     }
 
-    fun panelBack() {
+    private fun panelBack() {
         Data.Panels.values().also {
             if (it.indexOf(Data.currentPanel) != 0) {
                 panelStep(it[it.indexOf(Data.currentPanel) - 1] to Data.currentPanel!!, Direction.RIGHT)

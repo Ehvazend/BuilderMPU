@@ -1,8 +1,8 @@
 package net.ehvazend.builder.performance.panels
 
+import javafx.scene.Node
 import javafx.scene.control.Button
 import javafx.scene.layout.HBox
-import javafx.scene.layout.Pane
 import javafx.scene.layout.VBox
 import javafx.stage.DirectoryChooser
 import javafx.stage.FileChooser
@@ -13,6 +13,7 @@ import net.ehvazend.builder.performance.handlers.AnimationHandler.Effect.toggleD
 import net.ehvazend.builder.performance.handlers.ContentHandler
 import net.ehvazend.builder.performance.interfaces.Panel
 import net.ehvazend.builder.performance.interfaces.Slide
+import java.util.*
 
 object Init : Panel {
     override val header: HBox by lazy {
@@ -42,14 +43,22 @@ object Init : Panel {
             }
         }
     }
-
     // Header button
     private lateinit var createButton: Button
     private lateinit var loadButton: Button
 
-    override val body: Pane by lazy {
-        fillBody(create, load)
+    override val body: Node
+        get() = super.body
+
+    override val slides: HashMap<String, Slide> by lazy {
+        HashMap<String, Slide>().also {
+            it.put("create", create)
+            it.put("load", load)
+        }
     }
+
+    override val defaultSlide: Slide by lazy { create }
+    override lateinit var currentSlide: Slide
 
     private val create: Slide by lazy {
         object : Slide {
@@ -66,9 +75,6 @@ object Init : Panel {
     private val load: Slide by lazy {
         object : Slide {
             override val slide = getRoot<VBox>("/assets/FXML/init/Load.fxml").also {
-                it.opacity = 0.0
-                it.isMouseTransparent = true
-
                 (it.children.first() as HBox).children.forEach {
                     if (it.id == "chooseFile") (it as Button).setOnAction {
                         FileChooser().showOpenDialog(Stage())

@@ -4,7 +4,6 @@ import javafx.animation.Interpolator
 import javafx.animation.KeyFrame
 import javafx.animation.KeyValue
 import javafx.animation.Timeline
-import javafx.beans.property.Property
 import javafx.beans.value.WritableValue
 import javafx.scene.Node
 import javafx.scene.effect.ColorAdjust
@@ -14,10 +13,6 @@ import net.ehvazend.builder.performance.Data
 object AnimationHandler {
     // Allows smoothly change value
     data class Add(val interpolator: Interpolator? = null, val isAutoReverse: Boolean? = null, val cycleCount: Int? = null)
-
-    fun <T>timelineSOFOverride(value: Property<T>) {
-        (value.bean as Node).isMouseTransparent = false
-    }
 
     fun <T> WritableValue<T>.timeline(values: Pair<T, T>, duration: Double, add: Add? = null) = Timeline().let {
         // Set up KeyFrame and adding in to Timeline
@@ -68,6 +63,18 @@ object AnimationHandler {
             Data.headerContainer.appearance(duration, add)
             Data.moveBox.appearance(duration, add)
             Data.bodyContainer.appearance(duration, add)
+        }
+    }
+
+    object InstantEffect {
+        fun Node.instantAppearance() = this.also {
+            it.opacity = 1.0
+            it.isMouseTransparent = false
+        }
+
+        fun Node.instantDisappearance() = this.also {
+            it.opacity = .0
+            it.isMouseTransparent = true
         }
     }
 }
