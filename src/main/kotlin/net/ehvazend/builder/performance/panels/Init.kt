@@ -43,6 +43,7 @@ object Init : Panel {
             }
         }
     }
+
     // Header button
     private lateinit var createButton: Button
     private lateinit var loadButton: Button
@@ -50,12 +51,11 @@ object Init : Panel {
     override val body: Node
         get() = super.body
 
-    override val slides: HashMap<String, Slide> by lazy {
-        HashMap<String, Slide>().also {
-            it.put("create", create)
-            it.put("load", load)
+    override val slides: HashMap<String, Slide>
+        get() = HashMap<String, Slide>().also {
+            it["create"] = create
+            it["load"] = load
         }
-    }
 
     override val defaultSlide: Slide by lazy { create }
     override lateinit var currentSlide: Slide
