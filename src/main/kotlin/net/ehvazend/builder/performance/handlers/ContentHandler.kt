@@ -101,6 +101,8 @@ object ContentHandler {
             it.appearance(Data.Config.duration)
             it.layoutYProperty().timeline(-direction.y to 0.0, Data.Config.duration, AnimationHandler.Add(Data.Config.interpolator))
         }
+
+        newSlide.source.currentSlide(newSlide)
     }
 
     fun slideNext(slides: Pair<Slide, Slide>) = slideStep(slides, Direction.BOTTOM)

@@ -7,7 +7,6 @@ import javafx.scene.layout.HBox
 import javafx.scene.layout.Pane
 import javafx.scene.shape.Rectangle
 import javafx.stage.Stage
-import net.ehvazend.builder.filesystem.getRoot
 import net.ehvazend.builder.performance.interfaces.Panel
 import net.ehvazend.builder.performance.panels.Init
 
@@ -39,14 +38,26 @@ object Data {
 
     // Panels
     enum class Panels(panel: Panel) {
-        INIT(Init),
-        TEST(object : Panel {
-            override val header: Node = getRoot<HBox>("/assets/FXML/init/Header.fxml").also { it.id = "headerTest" }
-            override val body: Node = Pane().also {
-                it.id = "bodyTest"
-                it.children += getRoot<javafx.scene.layout.VBox>("/assets/FXML/init/Create.fxml")
-            }
-        });
+        INIT(Init);
+//        TEST(object : Panel {
+//            override val header: Node = getRoot<HBox>("/assets/FXML/init/Header.fxml").also { it.id = "headerTest" }
+//            override val body: Node
+//                get() = super.body
+//
+//            override val slides: HashMap<String, Slide>
+//                get() = HashMap<String, Slide>().also {
+//                    it["create"] = create
+//                }
+//
+//            override val defaultSlide: Slide by lazy { create }
+//            override lateinit var currentSlide: Slide
+//
+//            private val create: Slide by lazy {
+//                object : Slide {
+//                    override val slide = getRoot<javafx.scene.layout.VBox>("/assets/FXML/init/Create.fxml")
+//                }
+//            }
+//        });
 
         val header: Node = panel.header
         val body: Node = panel.body

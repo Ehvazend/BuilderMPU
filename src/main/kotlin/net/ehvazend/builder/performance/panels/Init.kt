@@ -34,12 +34,12 @@ object Init : Panel {
 
             createButton.setOnAction {
                 toggleButton(Data.Config.duration)
-                ContentHandler.slideNext(create to load)
+                ContentHandler.slideNext(create to currentSlide)
             }
 
             loadButton.setOnAction {
                 toggleButton(Data.Config.duration)
-                ContentHandler.slideBack(load to create)
+                ContentHandler.slideBack(load to currentSlide)
             }
         }
     }
@@ -69,6 +69,8 @@ object Init : Panel {
                     }
                 }
             }
+
+            override val source = this@Init
         }
     }
 
@@ -81,6 +83,8 @@ object Init : Panel {
                     }
                 }
             }
+
+            override val source = this@Init
         }
     }
 }
