@@ -8,7 +8,7 @@
     <children>
         <HBox>
             <children>
-                <TextField disable="true" editable="false" focusTraversable="false" prefWidth="572.0" text="Not chosen" />
+                <TextField fx:id="loadTextField" disable="true" editable="false" focusTraversable="false" prefWidth="572.0" text="File not chosen" />
                 <Button fx:id="chooseFile" mnemonicParsing="false" text="..." />
             </children>
         </HBox>

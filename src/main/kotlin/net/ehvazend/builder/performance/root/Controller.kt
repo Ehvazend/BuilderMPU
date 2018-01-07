@@ -13,7 +13,7 @@ class Controller : Annotation() {
         super.initialize(location, resources)
 
         // Run
-        ContentHandler.initPanel(Data.Panels.INIT)
+        ContentHandler.initContent(Data.Panels.INIT)
         AnimationHandler.Effect.contentAppear(2.5)
         AnimationHandler.Effect.backgroundEffect(40.0)
     }

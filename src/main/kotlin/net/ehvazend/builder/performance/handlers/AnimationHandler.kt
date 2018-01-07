@@ -43,14 +43,18 @@ object AnimationHandler {
         }
 
         fun Node.enable(duration: Double, add: Add? = null) {
-            this.opacityProperty().timeline(0.5 to 1.0, duration, add).setOnFinished { this.isDisable = false }
+            if (this.isDisable) {
+                this.opacityProperty().timeline(0.5 to 1.0, duration, add).setOnFinished { this.isDisable = false }
+            }
         }
 
         fun Node.disable(duration: Double, add: Add? = null) {
-            this.isMouseTransparent = true
-            this.opacityProperty().timeline(1.0 to 0.5, duration, add).setOnFinished {
-                this.isMouseTransparent = false
-                this.isDisable = true
+            if (!this.isDisable) {
+                this.isMouseTransparent = true
+                this.opacityProperty().timeline(1.0 to 0.5, duration, add).setOnFinished {
+                    this.isMouseTransparent = false
+                    this.isDisable = true
+                }
             }
         }
 

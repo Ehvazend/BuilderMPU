@@ -4,9 +4,7 @@ import javafx.application.Platform
 import javafx.scene.Node
 import net.ehvazend.builder.performance.Data
 import net.ehvazend.builder.performance.handlers.AnimationHandler.Effect.appearance
-import net.ehvazend.builder.performance.handlers.AnimationHandler.Effect.disable
 import net.ehvazend.builder.performance.handlers.AnimationHandler.Effect.disappearance
-import net.ehvazend.builder.performance.handlers.AnimationHandler.Effect.enable
 import net.ehvazend.builder.performance.handlers.AnimationHandler.timeline
 import net.ehvazend.builder.performance.interfaces.Slide
 
@@ -25,45 +23,34 @@ object ContentHandler {
         return Content(loadHeader(panel), loadBody(panel)).also { Data.currentPanel = panel }
     }
 
-    fun initPanel(panel: Data.Panels) {
+    fun initContent(panel: Data.Panels) {
         loadContent(panel)
-
-        resizeBackground()
         initMoveBox()
-    }
-
-    private fun resizeBackground() {
-        when {
-            Data.root.height != 0.0 -> Data.background.height = Data.root.height
-            Data.root.height == 0.0 -> {
-                Platform.runLater {
-                    Data.background.height = Data.root.height
-                }
-            }
-        }
+        resizeBackground()
     }
 
     private fun initMoveBox() {
         fun updateStatus() {
             when {
                 Data.currentPanel == null || Data.Panels.values().size == 1 -> {
-                    Data.backButton.disable(Data.Config.duration)
-                    Data.nextButton.disable(Data.Config.duration)
+                    MoveBoxHandler.backButtonEnable = false
+                    MoveBoxHandler.nextButtonEnable = false
                 }
 
                 Data.Panels.values().indexOf(Data.currentPanel) == 0 -> {
-                    Data.backButton.disable(Data.Config.duration)
-                    Data.nextButton.enable(Data.Config.duration)
+                    MoveBoxHandler.backButtonEnable = false
+                    MoveBoxHandler.nextButtonEnable = true
                 }
 
-                Data.Panels.values().indexOf(Data.currentPanel) != 0 && Data.Panels.values().indexOf(Data.currentPanel) != Data.Panels.values().size - 1 -> {
-                    Data.backButton.enable(Data.Config.duration)
-                    Data.nextButton.enable(Data.Config.duration)
+                Data.Panels.values().indexOf(Data.currentPanel) != 0
+                        && Data.Panels.values().indexOf(Data.currentPanel) != Data.Panels.values().size - 1 -> {
+                    MoveBoxHandler.backButtonEnable = true
+                    MoveBoxHandler.nextButtonEnable = true
                 }
 
                 Data.Panels.values().indexOf(Data.currentPanel) == Data.Panels.values().size - 1 -> {
-                    Data.backButton.enable(Data.Config.duration)
-                    Data.nextButton.disable(Data.Config.duration)
+                    MoveBoxHandler.backButtonEnable = true
+                    MoveBoxHandler.nextButtonEnable = false
                 }
             }
         }
@@ -81,7 +68,18 @@ object ContentHandler {
         }
     }
 
-    // Slide zone ------------------------------
+    private fun resizeBackground() {
+        when {
+            Data.root.height != 0.0 -> Data.background.height = Data.root.height
+            Data.root.height == 0.0 -> {
+                Platform.runLater {
+                    Data.background.height = Data.root.height
+                }
+            }
+        }
+    }
+
+    // Slide zone -------------------------------
     sealed class Direction(val x: Double = 0.0, val y: Double = 0.0) {
         object TOP : Direction(y = -Data.stage.scene.height)
         object RIGHT : Direction(x = Data.stage.scene.width)
@@ -108,7 +106,7 @@ object ContentHandler {
     fun slideNext(slides: Pair<Slide, Slide>) = slideStep(slides, Direction.BOTTOM)
     fun slideBack(slides: Pair<Slide, Slide>) = slideStep(slides, Direction.TOP)
 
-
+    // Panel zone -------------------------------
     private fun panelStep(panels: Pair<Data.Panels, Data.Panels>, direction: Direction) {
         val (newPanel, oldPanel) = panels
 
