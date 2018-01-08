@@ -2,6 +2,7 @@ package net.ehvazend.builder.performance.root
 
 import net.ehvazend.builder.performance.Data
 import net.ehvazend.builder.performance.handlers.AnimationHandler
+import net.ehvazend.builder.performance.handlers.AnimationHandler.Add
 import net.ehvazend.builder.performance.handlers.ContentHandler
 import java.net.URL
 import java.util.*
@@ -14,7 +15,7 @@ class Controller : Annotation() {
 
         // Run
         ContentHandler.initContent(Data.Panels.INIT)
-        AnimationHandler.Effect.contentAppear(2.5)
+        AnimationHandler.Effect.contentAppear(Add(2.5))
         AnimationHandler.Effect.backgroundEffect(40.0)
     }
 }

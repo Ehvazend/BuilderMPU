@@ -8,14 +8,14 @@ object MoveBoxHandler {
     var backButtonEnable: Boolean by Delegates.observable(true) { _, oldValue, newValue ->
         when (!oldValue) {
             newValue -> return@observable
-            else -> Data.backButton.toggleDisable(Data.Config.duration)
+            else -> Data.backButton.toggleDisable()
         }
     }
 
     var nextButtonEnable: Boolean by Delegates.observable(true) { _, oldValue, newValue ->
         when (!oldValue) {
             newValue -> return@observable
-            else -> Data.nextButton.toggleDisable(Data.Config.duration)
+            else -> Data.nextButton.toggleDisable()
         }
     }
 }
