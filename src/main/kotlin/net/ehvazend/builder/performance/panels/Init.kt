@@ -2,13 +2,16 @@ package net.ehvazend.builder.performance.panels
 
 import javafx.scene.Node
 import javafx.scene.control.Button
+import javafx.scene.control.TextField
 import javafx.scene.layout.HBox
 import javafx.scene.layout.VBox
 import javafx.stage.DirectoryChooser
 import javafx.stage.FileChooser
+import javafx.stage.Modality
 import javafx.stage.Stage
 import net.ehvazend.builder.filesystem.getRoot
 import net.ehvazend.builder.performance.Data
+import net.ehvazend.builder.performance.handlers.AnimationHandler.Effect.enable
 import net.ehvazend.builder.performance.handlers.AnimationHandler.Effect.toggleDisable
 import net.ehvazend.builder.performance.handlers.ContentHandler
 import net.ehvazend.builder.performance.interfaces.Panel
@@ -27,18 +30,18 @@ object Init : Panel {
                 }
             }
 
-            fun toggleButton(duration: Double) {
-                createButton.toggleDisable(duration)
-                loadButton.toggleDisable(duration)
+            fun toggleButton() {
+                createButton.toggleDisable()
+                loadButton.toggleDisable()
             }
 
             createButton.setOnAction {
-                toggleButton(Data.Config.duration)
+                toggleButton()
                 ContentHandler.slideNext(create to currentSlide)
             }
 
             loadButton.setOnAction {
-                toggleButton(Data.Config.duration)
+                toggleButton()
                 ContentHandler.slideBack(load to currentSlide)
             }
         }
@@ -64,13 +67,27 @@ object Init : Panel {
         object : Slide {
             override val slide = getRoot<VBox>("/assets/FXML/init/Create.fxml").also {
                 (it.children.first() as HBox).children.forEach {
-                    if (it.id == "chooseDirectory") (it as Button).setOnAction {
-                        DirectoryChooser().showDialog(Stage())
+                    when {
+                        it.id == "chooseDirectory" -> (it as Button).setOnAction {
+                            DirectoryChooser().showDialog(Stage().also {
+                                it.initOwner(Data.stage)
+                                it.initModality(Modality.WINDOW_MODAL)
+                            }.owner).also {
+                                if (it != null) {
+                                    createTextField.text = it.path
+                                    createTextField.enable()
+                                }
+                            }
+                        }
+
+                        it.id == "createTextField" -> createTextField = it as TextField
                     }
                 }
             }
 
             override val source = this@Init
+
+            lateinit var createTextField: TextField
         }
     }
 
@@ -78,13 +95,30 @@ object Init : Panel {
         object : Slide {
             override val slide = getRoot<VBox>("/assets/FXML/init/Load.fxml").also {
                 (it.children.first() as HBox).children.forEach {
-                    if (it.id == "chooseFile") (it as Button).setOnAction {
-                        FileChooser().showOpenDialog(Stage())
+                    when {
+                        it.id == "chooseFile" -> (it as Button).setOnAction {
+                            FileChooser().also {
+                                it.extensionFilters.add(FileChooser.ExtensionFilter("MPU config files", "*.conf"))
+                                it.showOpenDialog(Stage().also {
+                                    it.initOwner(Data.stage)
+                                    it.initModality(Modality.WINDOW_MODAL)
+                                }.owner).also {
+                                    if (it != null) {
+                                        loadTextField.text = it.path
+                                        loadTextField.enable()
+                                    }
+                                }
+                            }
+                        }
+
+                        it.id == "loadTextField" -> loadTextField = it as TextField
                     }
                 }
             }
 
             override val source = this@Init
+
+            lateinit var loadTextField: TextField
         }
     }
 }

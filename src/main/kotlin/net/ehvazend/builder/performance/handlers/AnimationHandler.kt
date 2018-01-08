@@ -60,7 +60,8 @@ object AnimationHandler {
         }
 
         fun backgroundEffect(duration: Double?): Timeline {
-            return (Data.background.effect as ColorAdjust).hueProperty().timeline(0.0 to 1.0, Add(duration = duration, isAutoReverse = true, cycleCount = -1))
+            return (Data.background.effect as ColorAdjust).hueProperty().timeline(0.0 to 1.0,
+                    Add(duration = duration, isAutoReverse = true, cycleCount = -1))
         }
 
         fun contentAppear(add: Add? = null) {
