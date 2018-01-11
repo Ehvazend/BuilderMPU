@@ -135,19 +135,11 @@ object ContentHandler {
         newPanel.body.layoutXProperty().timeline(-direction.x to 0.0, AnimationHandler.Add(interpolator = Data.Config.interpolator))
     }
 
-    private fun panelNext() {
-        Data.Panels.values().also {
-            if (it.indexOf(Data.currentPanel) != it.lastIndex) {
-                panelStep(it[it.indexOf(Data.currentPanel) + 1] to Data.currentPanel!!, Direction.LEFT)
-            }
-        }
+    private fun panelBack() {
+        panelStep(Data.currentPanel!!.panel.backPanel!! to Data.currentPanel!!, Direction.RIGHT)
     }
 
-    private fun panelBack() {
-        Data.Panels.values().also {
-            if (it.indexOf(Data.currentPanel) != 0) {
-                panelStep(it[it.indexOf(Data.currentPanel) - 1] to Data.currentPanel!!, Direction.RIGHT)
-            }
-        }
+    private fun panelNext() {
+        panelStep(Data.currentPanel!!.panel.nextPanel!! to Data.currentPanel!!, Direction.LEFT)
     }
 }

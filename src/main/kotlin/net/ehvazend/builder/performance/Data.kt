@@ -37,9 +37,11 @@ object Data {
     lateinit var bodyContainer: Pane
 
     // Panels
-    enum class Panels(panel: Panel) {
+    enum class Panels(val panel: Panel) {
         INIT(Init);
-//        TEST(object : Panel {
+//        TEST(O());
+//
+//        class O : Panel {
 //            override val header: Node = getRoot<HBox>("/assets/FXML/init/Header.fxml").also { it.id = "headerTest" }
 //            override val body: Node
 //                get() = super.body
@@ -54,10 +56,12 @@ object Data {
 //
 //            private val create: Slide by lazy {
 //                object : Slide {
+//                    override val source: Panel
+//                        get() = this@O
 //                    override val slide = getRoot<javafx.scene.layout.VBox>("/assets/FXML/init/Create.fxml")
 //                }
 //            }
-//        });
+//        }
 
         val header: Node = panel.header
         val body: Node = panel.body
