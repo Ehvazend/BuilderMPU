@@ -32,11 +32,11 @@ object AnimationHandler {
     }
 
     object Effect {
-        fun Node.appearance(add: Add? = null)
-                = this.opacityProperty().timeline(this.opacity to 1.0, add).also { this.isMouseTransparent = false }
+        fun Node.appearance(add: Add? = null, initialValue: Double? = this.opacity)
+                = this.opacityProperty().timeline(initialValue to 1.0, add).also { this.isMouseTransparent = false }
 
-        fun Node.disappearance(add: Add? = null)
-                = this.opacityProperty().timeline(this.opacity to 0.0, add).also { this.isMouseTransparent = true }
+        fun Node.disappearance(add: Add? = null, initialValue: Double? = this.opacity)
+                = this.opacityProperty().timeline(initialValue to 0.0, add).also { this.isMouseTransparent = true }
 
         fun Node.toggleDisable(add: Add? = null) = when (this.isDisable) {
             true -> this.enable(add)
@@ -65,10 +65,10 @@ object AnimationHandler {
         }
 
         fun contentAppear(add: Add? = null) {
-            Data.background.appearance(Add(duration = Data.Config.duration / 1.5))
-            Data.headerContainer.appearance(add)
-            Data.moveBox.appearance(add)
-            Data.bodyContainer.appearance(add)
+            Data.background.appearance(add!!.copy(duration = add.duration!! / 1.5), 0.0)
+            Data.headerContainer.appearance(add, 0.0)
+            Data.moveBox.appearance(add, 0.0)
+            Data.bodyContainer.appearance(add, 0.0)
         }
     }
 
