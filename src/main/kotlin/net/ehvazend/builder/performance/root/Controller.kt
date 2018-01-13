@@ -14,7 +14,7 @@ class Controller : Annotation() {
         super.initialize(location, resources)
 
         // Run
-        ContentHandler.initContent(Data.Panels.INIT)
+        ContentHandler.initContent(Data.panels.first { it.id == "init" })
         AnimationHandler.Effect.contentAppear(Add(2.5))
         AnimationHandler.Effect.backgroundEffect(40.0)
     }

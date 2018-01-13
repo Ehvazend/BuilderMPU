@@ -7,24 +7,25 @@ import net.ehvazend.builder.performance.handlers.AnimationHandler.Add
 import net.ehvazend.builder.performance.handlers.AnimationHandler.Effect.appearance
 import net.ehvazend.builder.performance.handlers.AnimationHandler.Effect.disappearance
 import net.ehvazend.builder.performance.handlers.AnimationHandler.timeline
+import net.ehvazend.builder.performance.interfaces.Panel
 import net.ehvazend.builder.performance.interfaces.Slide
 
 object ContentHandler {
     data class Content(val header: Node, val body: Node)
 
-    private fun loadContent(panel: Data.Panels): Content {
-        fun loadHeader(panel: Data.Panels) = panel.header.also {
+    private fun loadContent(panel: Panel): Content {
+        fun loadHeader(panel: Panel) = panel.header.also {
             Data.headerContainer.children += it
         }
 
-        fun loadBody(panel: Data.Panels) = panel.body.also {
+        fun loadBody(panel: Panel) = panel.body.also {
             Data.bodyContainer.children += it
         }
 
         return Content(loadHeader(panel), loadBody(panel)).also { Data.currentPanel = panel }
     }
 
-    fun initContent(panel: Data.Panels) {
+    fun initContent(panel: Panel) {
         loadContent(panel)
         initMoveBox()
         resizeBackground()
@@ -33,23 +34,23 @@ object ContentHandler {
     private fun initMoveBox() {
         fun updateStatus() {
             when {
-                Data.currentPanel == null || Data.Panels.values().size == 1 -> {
+                Data.currentPanel == null || Data.panels.size == 1 -> {
                     MoveBoxHandler.backButtonEnable = false
                     MoveBoxHandler.nextButtonEnable = false
                 }
 
-                Data.Panels.values().indexOf(Data.currentPanel) == 0 -> {
+                Data.panels.indexOf(Data.currentPanel!!) == 0 -> {
                     MoveBoxHandler.backButtonEnable = false
                     MoveBoxHandler.nextButtonEnable = true
                 }
 
-                Data.Panels.values().indexOf(Data.currentPanel) != 0
-                        && Data.Panels.values().indexOf(Data.currentPanel) != Data.Panels.values().size - 1 -> {
+                Data.panels.indexOf(Data.currentPanel!!) != 0
+                        && Data.panels.indexOf(Data.currentPanel!!) != Data.panels.size - 1 -> {
                     MoveBoxHandler.backButtonEnable = true
                     MoveBoxHandler.nextButtonEnable = true
                 }
 
-                Data.Panels.values().indexOf(Data.currentPanel) == Data.Panels.values().size - 1 -> {
+                Data.panels.indexOf(Data.currentPanel!!) == Data.panels.size - 1 -> {
                     MoveBoxHandler.backButtonEnable = true
                     MoveBoxHandler.nextButtonEnable = false
                 }
@@ -108,7 +109,7 @@ object ContentHandler {
     fun slideBack(slides: Pair<Slide, Slide>) = slideStep(slides, Direction.TOP)
 
     // Panel zone -------------------------------
-    private fun panelStep(panels: Pair<Data.Panels, Data.Panels>, direction: Direction) {
+    private fun panelStep(panels: Pair<Panel, Panel>, direction: Direction) {
         val (newPanel, oldPanel) = panels
 
         // Load new objects
@@ -136,10 +137,10 @@ object ContentHandler {
     }
 
     private fun panelBack() {
-        panelStep(Data.currentPanel!!.panel.backPanel!! to Data.currentPanel!!, Direction.RIGHT)
+        panelStep(Data.currentPanel!!.backPanel to Data.currentPanel!!, Direction.RIGHT)
     }
 
     private fun panelNext() {
-        panelStep(Data.currentPanel!!.panel.nextPanel!! to Data.currentPanel!!, Direction.LEFT)
+        panelStep(Data.currentPanel!!.nextPanel to Data.currentPanel!!, Direction.LEFT)
     }
 }

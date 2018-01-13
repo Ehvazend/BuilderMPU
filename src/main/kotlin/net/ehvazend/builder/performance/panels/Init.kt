@@ -19,6 +19,8 @@ import net.ehvazend.builder.performance.interfaces.Slide
 import java.util.*
 
 object Init : Panel {
+    override val id = "init"
+
     override val header: HBox by lazy {
         getRoot<HBox>("/assets/FXML/init/Header.fxml").also {
             it.id = "headerInit"

@@ -1,7 +1,6 @@
 package net.ehvazend.builder.performance
 
 import javafx.animation.Interpolator
-import javafx.scene.Node
 import javafx.scene.control.Button
 import javafx.scene.layout.HBox
 import javafx.scene.layout.Pane
@@ -36,36 +35,7 @@ object Data {
     // Panels's container
     lateinit var bodyContainer: Pane
 
-    // Panels
-    enum class Panels(val panel: Panel) {
-        INIT(Init);
-//        TEST(O());
-//
-//        class O : Panel {
-//            override val header: Node = getRoot<HBox>("/assets/FXML/init/Header.fxml").also { it.id = "headerTest" }
-//            override val body: Node
-//                get() = super.body
-//
-//            override val slides: HashMap<String, Slide>
-//                get() = HashMap<String, Slide>().also {
-//                    it["create"] = create
-//                }
-//
-//            override val defaultSlide: Slide by lazy { create }
-//            override lateinit var currentSlide: Slide
-//
-//            private val create: Slide by lazy {
-//                object : Slide {
-//                    override val source: Panel
-//                        get() = this@O
-//                    override val slide = getRoot<javafx.scene.layout.VBox>("/assets/FXML/init/Create.fxml")
-//                }
-//            }
-//        }
+    var currentPanel: Panel? = null
 
-        val header: Node = panel.header
-        val body: Node = panel.body
-    }
-
-    var currentPanel: Panels? = null
+    val panels = arrayListOf<Panel>(Init)
 }
