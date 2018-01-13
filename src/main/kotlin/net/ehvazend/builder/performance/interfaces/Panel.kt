@@ -7,6 +7,8 @@ import net.ehvazend.builder.performance.handlers.AnimationHandler.InstantEffect.
 import java.util.*
 
 interface Panel {
+    val id: String
+
     val header: Node
     val body: Node
         get() = fillBody()
@@ -15,10 +17,10 @@ interface Panel {
     val defaultSlide: Slide
     var currentSlide: Slide
 
-    val backPanel: Data.Panels?
+    val backPanel: Panel
         get() = autoBackPanel()
 
-    val nextPanel: Data.Panels?
+    val nextPanel: Panel
         get() = autoNextPanel()
 
     private fun fillBody() = Pane().also { pane ->
@@ -32,12 +34,15 @@ interface Panel {
         currentSlide = value
     }
 
-    private fun autoBackPanel(): Data.Panels? = Data.Panels.values().let {
-        if (it.indexOf(Data.currentPanel) != 0) it[it.indexOf(Data.currentPanel) - 1] else null
+    private fun autoBackPanel() = Data.panels.let { panels ->
+        panels.indexOf(this).let {
+            if (it != 0) panels[it - 1] else throw NullPointerException()
+        }
     }
 
-    private fun autoNextPanel(): Data.Panels? = Data.Panels.values().let {
-        if (it.indexOf(Data.currentPanel) != it.lastIndex) it[it.indexOf(Data.currentPanel) + 1] else null
+    private fun autoNextPanel() = Data.panels.let { panels ->
+        panels.indexOf(this).let {
+            if (it != panels.lastIndex) panels[it + 1] else throw NullPointerException()
+        }
     }
-
 }
