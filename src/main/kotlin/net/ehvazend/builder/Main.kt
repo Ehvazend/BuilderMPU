@@ -1,24 +1,19 @@
 package net.ehvazend.builder
 
-import javafx.application.Application
-import javafx.fxml.FXMLLoader
 import javafx.scene.Scene
 import javafx.scene.image.Image
 import javafx.stage.Stage
 import net.ehvazend.builder.Main.DataApplication.*
 import net.ehvazend.builder.panels.Init
 import net.ehvazend.graphics.Data
-import net.ehvazend.graphics.loadPanels
+import net.ehvazend.graphics.MPU
+import net.ehvazend.graphics.handlers.ContentHandler
 
-class Main : Application() {
+class Main : MPU() {
     enum class DataApplication(val get: String) {
         STYLE("/assets/Main.css"),
         LOGO("/assets/Logo.png"),
         TITLE("MPU: Builder")
-    }
-
-    fun initStage(stage: Stage) {
-        Data.stage = stage
     }
 
     override fun start(mainStage: Stage) {
@@ -28,25 +23,21 @@ class Main : Application() {
         // Load all panels from project to Data.panels
         loadPanels(Init)
 
-        // Main.fxml load
-        FXMLLoader().also {
-            // Load resource
-            it.location = javaClass.getResource("/assets/FXML/main/Main.fxml")
+        // Set scene
+        mainStage.scene = Scene(Data.root)
 
-            // Set scene
-            mainStage.scene = Scene(it.load())
-
-            // Scene parameters
-            mainStage.also {
-                it.isResizable = false
-                it.scene.stylesheets += javaClass.getResource(STYLE.get).toExternalForm()
-                it.icons += Image(javaClass.getResourceAsStream(LOGO.get))
-                it.title = TITLE.get
-            }
-
-            // Launching
-            mainStage.show()
+        // Scene parameters
+        mainStage.also {
+            it.isResizable = false
+            it.scene.stylesheets += javaClass.getResource(STYLE.get).toExternalForm()
+            it.icons += Image(javaClass.getResourceAsStream(LOGO.get))
+            it.title = TITLE.get
         }
+
+        ContentHandler.initContent(Data.panels.first { it.id == "init" })
+
+        // Launching
+        mainStage.show()
     }
 
     companion object {
