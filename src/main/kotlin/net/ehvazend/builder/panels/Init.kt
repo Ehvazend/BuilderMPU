@@ -1,4 +1,4 @@
-package net.ehvazend.builder.performance.panels
+package net.ehvazend.builder.panels
 
 import javafx.scene.Node
 import javafx.scene.control.Button
@@ -9,13 +9,13 @@ import javafx.stage.DirectoryChooser
 import javafx.stage.FileChooser
 import javafx.stage.Modality
 import javafx.stage.Stage
-import net.ehvazend.builder.filesystem.getRoot
-import net.ehvazend.builder.performance.Data
-import net.ehvazend.builder.performance.handlers.AnimationHandler.Effect.enable
-import net.ehvazend.builder.performance.handlers.AnimationHandler.Effect.toggleDisable
-import net.ehvazend.builder.performance.handlers.ContentHandler
-import net.ehvazend.builder.performance.interfaces.Panel
-import net.ehvazend.builder.performance.interfaces.Slide
+import net.ehvazend.graphics.Data
+import net.ehvazend.graphics.getRoot
+import net.ehvazend.graphics.handlers.AnimationHandler.Effect.enable
+import net.ehvazend.graphics.handlers.AnimationHandler.Effect.toggleDisable
+import net.ehvazend.graphics.handlers.ContentHandler
+import net.ehvazend.graphics.interfaces.Panel
+import net.ehvazend.graphics.interfaces.Slide
 import java.util.*
 
 object Init : Panel {
