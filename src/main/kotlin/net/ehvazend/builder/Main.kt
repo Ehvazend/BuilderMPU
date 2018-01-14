@@ -6,7 +6,9 @@ import javafx.scene.Scene
 import javafx.scene.image.Image
 import javafx.stage.Stage
 import net.ehvazend.builder.Main.DataApplication.*
-import net.ehvazend.builder.performance.Data
+import net.ehvazend.builder.panels.Init
+import net.ehvazend.graphics.Data
+import net.ehvazend.graphics.loadPanels
 
 class Main : Application() {
     enum class DataApplication(val get: String) {
@@ -22,6 +24,9 @@ class Main : Application() {
     override fun start(mainStage: Stage) {
         // Save stage in Data
         initStage(mainStage)
+
+        // Load all panels from project to Data.panels
+        loadPanels(Init)
 
         // Main.fxml load
         FXMLLoader().also {
