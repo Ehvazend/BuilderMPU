@@ -22,13 +22,13 @@ object Init : Panel {
     override val id = "init"
 
     override val header: HBox by lazy {
-        getRoot<HBox>("/assets/FXML/init/Header.fxml").also {
-            it.id = "headerInit"
+        getRoot<HBox>("/assets/FXML/init/Header.fxml").apply {
+            id = "headerInit"
 
-            it.children.forEach {
-                when {
-                    it.id == "createButton" -> createButton = it as Button
-                    it.id == "loadButton" -> loadButton = it as Button
+            children.forEach {
+                when (it.id) {
+                    "createButton" -> createButton = it as Button
+                    "loadButton" -> loadButton = it as Button
                 }
             }
 
@@ -67,13 +67,13 @@ object Init : Panel {
 
     private val create: Slide by lazy {
         object : Slide {
-            override val slide = getRoot<VBox>("/assets/FXML/init/Create.fxml").also {
-                (it.children.first() as HBox).children.forEach {
-                    when {
-                        it.id == "chooseDirectory" -> (it as Button).setOnAction {
-                            DirectoryChooser().showDialog(Stage().also {
-                                it.initOwner(Data.stage)
-                                it.initModality(Modality.WINDOW_MODAL)
+            override val body = getRoot<VBox>("/assets/FXML/init/Create.fxml").apply {
+                (children.first() as HBox).children.forEach {
+                    when (it.id) {
+                        "chooseDirectory" -> (it as Button).setOnAction {
+                            DirectoryChooser().showDialog(Stage().apply {
+                                initOwner(Data.stage)
+                                initModality(Modality.WINDOW_MODAL)
                             }.owner).also {
                                 if (it != null) {
                                     createTextField.text = it.path
@@ -82,7 +82,7 @@ object Init : Panel {
                             }
                         }
 
-                        it.id == "createTextField" -> createTextField = it as TextField
+                        "createTextField" -> createTextField = it as TextField
                     }
                 }
             }
@@ -95,15 +95,15 @@ object Init : Panel {
 
     private val load: Slide by lazy {
         object : Slide {
-            override val slide = getRoot<VBox>("/assets/FXML/init/Load.fxml").also {
-                (it.children.first() as HBox).children.forEach {
-                    when {
-                        it.id == "chooseFile" -> (it as Button).setOnAction {
-                            FileChooser().also {
-                                it.extensionFilters.add(FileChooser.ExtensionFilter("MPU config files", "*.conf"))
-                                it.showOpenDialog(Stage().also {
-                                    it.initOwner(Data.stage)
-                                    it.initModality(Modality.WINDOW_MODAL)
+            override val body = getRoot<VBox>("/assets/FXML/init/Load.fxml").apply {
+                (children.first() as HBox).children.forEach {
+                    when (it.id) {
+                        "chooseFile" -> (it as Button).setOnAction {
+                            FileChooser().apply {
+                                extensionFilters.add(FileChooser.ExtensionFilter("MPU config files", "*.conf"))
+                                showOpenDialog(Stage().apply {
+                                    initOwner(Data.stage)
+                                    initModality(Modality.WINDOW_MODAL)
                                 }.owner).also {
                                     if (it != null) {
                                         loadTextField.text = it.path
@@ -112,8 +112,7 @@ object Init : Panel {
                                 }
                             }
                         }
-
-                        it.id == "loadTextField" -> loadTextField = it as TextField
+                        "loadTextField" -> loadTextField = it as TextField
                     }
                 }
             }

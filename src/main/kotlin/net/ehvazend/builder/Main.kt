@@ -1,15 +1,13 @@
 package net.ehvazend.builder
 
-import javafx.scene.Scene
 import javafx.scene.image.Image
 import javafx.stage.Stage
 import net.ehvazend.builder.Main.DataApplication.*
 import net.ehvazend.builder.panels.Init
 import net.ehvazend.graphics.Data
-import net.ehvazend.graphics.MPU
-import net.ehvazend.graphics.handlers.ContentHandler
+import net.ehvazend.graphics.InitializationMPU
 
-class Main : MPU() {
+class Main : InitializationMPU(2.5, 40.0) {
     enum class DataApplication(val get: String) {
         STYLE("/assets/Main.css"),
         LOGO("/assets/Logo.png"),
@@ -17,25 +15,22 @@ class Main : MPU() {
     }
 
     override fun start(mainStage: Stage) {
-        // Save stage in Data
-        initStage(mainStage)
-
         // Load all panels from project to Data.panels
         loadPanels(Init)
 
-        // Set scene
-        mainStage.scene = Scene(Data.root)
+        // Start with Init panel
+        initPanel(Data.panels.first { it.id == "init" })
+
+        // Save stage in Data and set scene
+        initStage(mainStage)
 
         // Scene parameters
-        mainStage.also {
-            it.isResizable = false
-            it.scene.stylesheets += javaClass.getResource(STYLE.get).toExternalForm()
-            it.icons += Image(javaClass.getResourceAsStream(LOGO.get))
-            it.title = TITLE.get
+        mainStage.apply {
+            isResizable = false
+            scene.stylesheets += Main::class.java.getResource(STYLE.get).toExternalForm()
+            icons += Image(Main::class.java.getResourceAsStream(LOGO.get))
+            title = TITLE.get
         }
-
-        ContentHandler.initContent(Data.panels.first { it.id == "init" })
-
         // Launching
         mainStage.show()
     }

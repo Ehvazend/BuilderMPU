@@ -44,6 +44,7 @@ dependencies {
     // Other libs
     compile "com.typesafe:config:$config"
     compile "org.jsoup:jsoup:$jsoup"
+    compile files ("../GraphicsMPU/build/libs/GraphicsMPU-Dev.jar")
 }
 
 compileKotlin {
@@ -64,6 +65,7 @@ jar {
                 "kotlin-runtime-${kotlin}.jar",
                 "kotlin-stdlib-${kotlin}.jar",
 //                "kotlin-reflect-${kotlin}.jar"
+                "GraphicsMPU-Dev.jar"
         ]
 
         configurations.compile
