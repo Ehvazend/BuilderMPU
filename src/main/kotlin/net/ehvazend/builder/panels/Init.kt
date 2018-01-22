@@ -42,15 +42,19 @@ object Init : Panel {
             createButton.setOnAction {
                 toggleButton()
                 ContentHandler.slideNext(create to currentSlide)
-                if (createTextField.text == "Directory not chosen") MoveBoxHandler.holdNextButtonOn = MoveBoxHandler.HoldValue(true, false)
-                else MoveBoxHandler.holdNextButtonOn = MoveBoxHandler.HoldValue(false, false)
+                when (createTextField.text) {
+                    "Directory not chosen" -> MoveBoxHandler.holdNextButtonOn = MoveBoxHandler.HoldValue(true, false)
+                    else -> MoveBoxHandler.holdNextButtonOn = MoveBoxHandler.HoldValue(false, false)
+                }
             }
 
             loadButton.setOnAction {
                 toggleButton()
                 ContentHandler.slideBack(load to currentSlide)
-                if (loadTextField.text == "File not chosen") MoveBoxHandler.holdNextButtonOn = MoveBoxHandler.HoldValue(true, false)
-                else MoveBoxHandler.holdNextButtonOn = MoveBoxHandler.HoldValue(false, false)
+                when (loadTextField.text) {
+                    "File not chosen" -> MoveBoxHandler.holdNextButtonOn = MoveBoxHandler.HoldValue(true, false)
+                    else -> MoveBoxHandler.holdNextButtonOn = MoveBoxHandler.HoldValue(false, false)
+                }
             }
         }
     }
@@ -70,7 +74,7 @@ object Init : Panel {
     override val defaultSlide: Slide by lazy { create }
     override lateinit var currentSlide: Slide
 
-     val create: Slide by lazy {
+    val create: Slide by lazy {
         object : Slide {
             override val body = getRoot<VBox>("/assets/FXML/init/Create.fxml").apply {
                 (children.first() as HBox).children.forEach {
@@ -84,7 +88,8 @@ object Init : Panel {
                                     createTextField.text = it.path
                                     createTextField.enable()
 
-                                    if(MoveBoxHandler.holdNextButtonOn.mode) MoveBoxHandler.holdNextButtonOn = MoveBoxHandler.HoldValue(false, false)
+                                    if (MoveBoxHandler.holdNextButtonOn.mode) MoveBoxHandler.holdNextButtonOn =
+                                            MoveBoxHandler.HoldValue(false, false)
                                 }
                             }
                         }
@@ -96,7 +101,7 @@ object Init : Panel {
 
             override val source = this@Init
         }
-     }
+    }
 
     lateinit var createTextField: TextField
 
@@ -116,11 +121,13 @@ object Init : Panel {
                                         loadTextField.text = it.path
                                         loadTextField.enable()
 
-                                        if(MoveBoxHandler.holdNextButtonOn.mode) MoveBoxHandler.holdNextButtonOn = MoveBoxHandler.HoldValue(false, false)
+                                        if (MoveBoxHandler.holdNextButtonOn.mode) MoveBoxHandler.holdNextButtonOn =
+                                                MoveBoxHandler.HoldValue(false, false)
                                     }
                                 }
                             }
                         }
+
                         "loadTextField" -> loadTextField = it as TextField
                     }
                 }
