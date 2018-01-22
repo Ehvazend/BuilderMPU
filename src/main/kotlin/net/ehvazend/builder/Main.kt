@@ -4,6 +4,7 @@ import javafx.scene.image.Image
 import javafx.stage.Stage
 import net.ehvazend.builder.Main.DataApplication.*
 import net.ehvazend.builder.panels.Init
+import net.ehvazend.builder.panels.Process
 import net.ehvazend.graphics.Data
 import net.ehvazend.graphics.InitializationMPU
 
@@ -16,7 +17,7 @@ class Main : InitializationMPU(2.5, 40.0) {
 
     override fun start(mainStage: Stage) {
         // Load all panels from project to Data.panels
-        loadPanels(Init)
+        loadPanels(Init, Process)
 
         // Start with Init panel
         initPanel(Data.panels.first { it.id == "init" })
@@ -31,6 +32,7 @@ class Main : InitializationMPU(2.5, 40.0) {
             icons += Image(Main::class.java.getResourceAsStream(LOGO.get))
             title = TITLE.get
         }
+
         // Launching
         mainStage.show()
     }
