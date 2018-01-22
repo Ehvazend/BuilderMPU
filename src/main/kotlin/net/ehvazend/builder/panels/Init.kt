@@ -1,5 +1,6 @@
 package net.ehvazend.builder.panels
 
+import javafx.application.Platform
 import javafx.scene.Node
 import javafx.scene.control.Button
 import javafx.scene.control.TextField
@@ -14,6 +15,7 @@ import net.ehvazend.graphics.getRoot
 import net.ehvazend.graphics.handlers.AnimationHandler.Effect.enable
 import net.ehvazend.graphics.handlers.AnimationHandler.Effect.toggleDisable
 import net.ehvazend.graphics.handlers.ContentHandler
+import net.ehvazend.graphics.handlers.MoveBoxHandler
 import net.ehvazend.graphics.interfaces.Panel
 import net.ehvazend.graphics.interfaces.Slide
 import java.util.*
@@ -40,11 +42,15 @@ object Init : Panel {
             createButton.setOnAction {
                 toggleButton()
                 ContentHandler.slideNext(create to currentSlide)
+                if (createTextField.text == "Directory not chosen") MoveBoxHandler.holdNextButtonOn = MoveBoxHandler.HoldValue(true, false)
+                else MoveBoxHandler.holdNextButtonOn = MoveBoxHandler.HoldValue(false, false)
             }
 
             loadButton.setOnAction {
                 toggleButton()
                 ContentHandler.slideBack(load to currentSlide)
+                if (loadTextField.text == "File not chosen") MoveBoxHandler.holdNextButtonOn = MoveBoxHandler.HoldValue(true, false)
+                else MoveBoxHandler.holdNextButtonOn = MoveBoxHandler.HoldValue(false, false)
             }
         }
     }
@@ -53,9 +59,7 @@ object Init : Panel {
     private lateinit var createButton: Button
     private lateinit var loadButton: Button
 
-    override val body: Node by lazy {
-        fillBody()
-    }
+    override val body: Node by lazy { fillBody() }
 
     override val slides: HashMap<String, Slide>
         get() = HashMap<String, Slide>().also {
@@ -66,7 +70,7 @@ object Init : Panel {
     override val defaultSlide: Slide by lazy { create }
     override lateinit var currentSlide: Slide
 
-    private val create: Slide by lazy {
+     val create: Slide by lazy {
         object : Slide {
             override val body = getRoot<VBox>("/assets/FXML/init/Create.fxml").apply {
                 (children.first() as HBox).children.forEach {
@@ -79,6 +83,8 @@ object Init : Panel {
                                 if (it != null) {
                                     createTextField.text = it.path
                                     createTextField.enable()
+
+                                    if(MoveBoxHandler.holdNextButtonOn.mode) MoveBoxHandler.holdNextButtonOn = MoveBoxHandler.HoldValue(false, false)
                                 }
                             }
                         }
@@ -89,12 +95,12 @@ object Init : Panel {
             }
 
             override val source = this@Init
-
-            lateinit var createTextField: TextField
         }
-    }
+     }
 
-    private val load: Slide by lazy {
+    lateinit var createTextField: TextField
+
+    val load: Slide by lazy {
         object : Slide {
             override val body = getRoot<VBox>("/assets/FXML/init/Load.fxml").apply {
                 (children.first() as HBox).children.forEach {
@@ -109,6 +115,8 @@ object Init : Panel {
                                     if (it != null) {
                                         loadTextField.text = it.path
                                         loadTextField.enable()
+
+                                        if(MoveBoxHandler.holdNextButtonOn.mode) MoveBoxHandler.holdNextButtonOn = MoveBoxHandler.HoldValue(false, false)
                                     }
                                 }
                             }
@@ -119,8 +127,14 @@ object Init : Panel {
             }
 
             override val source = this@Init
+        }
+    }
 
-            lateinit var loadTextField: TextField
+    lateinit var loadTextField: TextField
+
+    init {
+        Platform.runLater {
+            MoveBoxHandler.holdNextButtonOn = MoveBoxHandler.HoldValue(true, false)
         }
     }
 }
