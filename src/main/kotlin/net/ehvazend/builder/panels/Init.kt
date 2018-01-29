@@ -1,10 +1,10 @@
 package net.ehvazend.builder.panels
 
 import javafx.application.Platform
-import javafx.scene.Node
 import javafx.scene.control.Button
 import javafx.scene.control.TextField
 import javafx.scene.layout.HBox
+import javafx.scene.layout.Pane
 import javafx.scene.layout.VBox
 import javafx.stage.DirectoryChooser
 import javafx.stage.FileChooser
@@ -19,6 +19,7 @@ import net.ehvazend.graphics.handlers.MoveBoxHandler
 import net.ehvazend.graphics.interfaces.Panel
 import net.ehvazend.graphics.interfaces.Slide
 import java.util.*
+import java.util.regex.Pattern
 
 object Init : Panel {
     override val id = "init"
@@ -26,6 +27,9 @@ object Init : Panel {
     override val header: HBox by lazy {
         getRoot<HBox>("/assets/FXML/init/Header.fxml").apply {
             id = "headerInit"
+
+            lateinit var createButton: Button
+            lateinit var loadButton: Button
 
             children.forEach {
                 when (it.id) {
@@ -41,16 +45,16 @@ object Init : Panel {
 
             createButton.setOnAction {
                 toggleButton()
-                ContentHandler.slideNext(create to currentSlide)
-                when (createTextField.text) {
-                    "Directory not chosen" -> MoveBoxHandler.holdNextButtonOn = MoveBoxHandler.HoldValue(true, false)
-                    else -> MoveBoxHandler.holdNextButtonOn = MoveBoxHandler.HoldValue(false, false)
+                ContentHandler.slideNext(create to currentSlide!!)
+                when (createHoldOn) {
+                    true -> MoveBoxHandler.holdNextButtonOn = MoveBoxHandler.HoldValue(true, false)
+                    false -> MoveBoxHandler.holdNextButtonOn = MoveBoxHandler.HoldValue(false, false)
                 }
             }
 
             loadButton.setOnAction {
                 toggleButton()
-                ContentHandler.slideBack(load to currentSlide)
+                ContentHandler.slideBack(load to currentSlide!!)
                 when (loadTextField.text) {
                     "File not chosen" -> MoveBoxHandler.holdNextButtonOn = MoveBoxHandler.HoldValue(true, false)
                     else -> MoveBoxHandler.holdNextButtonOn = MoveBoxHandler.HoldValue(false, false)
@@ -59,11 +63,7 @@ object Init : Panel {
         }
     }
 
-    // Header button
-    private lateinit var createButton: Button
-    private lateinit var loadButton: Button
-
-    override val body: Node by lazy { fillBody() }
+    override val body: Pane by lazy { loadDefaultSlide() }
 
     override val slides: HashMap<String, Slide>
         get() = HashMap<String, Slide>().also {
@@ -72,13 +72,21 @@ object Init : Panel {
         }
 
     override val defaultSlide: Slide by lazy { create }
-    override lateinit var currentSlide: Slide
+    override var currentSlide: Slide? = null
 
-    val create: Slide by lazy {
+    private val create: Slide by lazy {
         object : Slide {
             override val body = getRoot<VBox>("/assets/FXML/init/Create.fxml").apply {
-                (children.first() as HBox).children.forEach {
+                (children[0] as HBox).children.forEach {
                     when (it.id) {
+                        "nameTextField" -> nameTextField = it as TextField
+                        "nameDescriptionTextField" -> nameDescriptionTextField = it as TextField
+                    }
+                }
+
+                (children[1] as HBox).children.forEach {
+                    when (it.id) {
+                        "createTextField" -> createTextField = it as TextField
                         "chooseDirectory" -> (it as Button).setOnAction {
                             DirectoryChooser().showDialog(Stage().apply {
                                 initOwner(Data.stage)
@@ -86,29 +94,44 @@ object Init : Panel {
                             }.owner).also {
                                 if (it != null) {
                                     createTextField.text = it.path
-                                    createTextField.enable()
-
-                                    if (MoveBoxHandler.holdNextButtonOn.mode) MoveBoxHandler.holdNextButtonOn =
-                                            MoveBoxHandler.HoldValue(false, false)
+                                    nameTextField.enable()
+                                    nameTextField.text = ""
+                                    nameDescriptionTextField.enable()
+                                        .apply { nameDescriptionTextField.isMouseTransparent = true }
                                 }
                             }
                         }
+                    }
+                }
 
-                        "createTextField" -> createTextField = it as TextField
+                nameTextField.apply {
+                    textProperty().addListener { _, oldValue, newValue ->
+                        if (!Pattern.compile("(\\w+)?").matcher(newValue).matches() || newValue == " " || newValue.length >= 16) {
+                            text = oldValue
+                            createHoldOn = oldValue == ""
+                        } else createHoldOn = newValue == ""
                     }
                 }
             }
+
+            lateinit var nameTextField: TextField
+            lateinit var nameDescriptionTextField: TextField
+            lateinit var createTextField: TextField
 
             override val source = this@Init
         }
     }
 
-    lateinit var createTextField: TextField
+    private var createHoldOn = true
+        set(value) {
+            MoveBoxHandler.holdNextButtonOn = MoveBoxHandler.HoldValue(value, false)
+            field = value
+        }
 
-    val load: Slide by lazy {
+    private val load: Slide by lazy {
         object : Slide {
-            override val body = getRoot<VBox>("/assets/FXML/init/Load.fxml").apply {
-                (children.first() as HBox).children.forEach {
+            override val body = getRoot<HBox>("/assets/FXML/init/Load.fxml").apply {
+                children.forEach {
                     when (it.id) {
                         "chooseFile" -> (it as Button).setOnAction {
                             FileChooser().apply {

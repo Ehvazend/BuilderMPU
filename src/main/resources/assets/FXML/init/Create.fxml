@@ -4,9 +4,15 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
-<VBox maxWidth="572.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
+<VBox spacing="14.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <HBox>
+         <children>
+            <TextField fx:id="nameTextField" disable="true" focusTraversable="false" text="Need to chose directory" HBox.hgrow="ALWAYS" />
+            <TextField fx:id="nameDescriptionTextField" disable="true" editable="false" focusTraversable="false" mouseTransparent="true" promptText="- Name of pack" />
+         </children>
+      </HBox>
+      <HBox maxWidth="-Infinity" minWidth="-Infinity" prefWidth="572.0">
          <children>
             <TextField fx:id="createTextField" disable="true" editable="false" focusTraversable="false" prefWidth="572.0" text="Directory not chosen" />
             <Button fx:id="chooseDirectory" mnemonicParsing="false" text="..." />
