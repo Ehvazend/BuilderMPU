@@ -1,5 +1,6 @@
 package net.ehvazend.builder
 
+import com.typesafe.config.ConfigObject
 import java.io.BufferedReader
 import java.io.IOException
 import java.io.InputStreamReader
@@ -19,6 +20,23 @@ object WebUtils {
             return@run ""
         }
     }!!
+
+    data class GameVersionData(val fileType: FileType, val gameVersion: String, val projectFileID: Int) {
+        companion object {
+            fun fill(configObject: ConfigObject) = GameVersionData(
+                when (configObject["FileType"]?.atKey("FileType")?.getString("FileType")) {
+                    "alpha" -> FileType.ALPHA
+                    "beta" -> FileType.BETA
+                    "release" -> FileType.RELEASE
+
+                    else -> throw IllegalArgumentException("Unidentified type of FileType")
+                },
+                configObject["GameVesion"]?.atKey("GameVersion")?.getString("GameVersion")!!,
+                configObject["ProjectFileID"]?.atKey("ProjectFileID")?.getInt("ProjectFileID")!!
+            )
+
+        }
+    }
 
     enum class FileType {
         ALPHA,
