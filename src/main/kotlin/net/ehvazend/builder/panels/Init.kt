@@ -45,7 +45,7 @@ object Init : Panel {
 
             createButton.setOnAction {
                 toggleButton()
-                ContentHandler.slideNext(create to currentSlide!!)
+                ContentHandler.slideBack(create to currentSlide!!)
                 when (createHoldOn) {
                     true -> MoveBoxHandler.holdNextButtonOn = MoveBoxHandler.HoldValue(true, false)
                     false -> MoveBoxHandler.holdNextButtonOn = MoveBoxHandler.HoldValue(false, false)
@@ -54,7 +54,7 @@ object Init : Panel {
 
             loadButton.setOnAction {
                 toggleButton()
-                ContentHandler.slideBack(load to currentSlide!!)
+                ContentHandler.slideNext(load to currentSlide!!)
                 when (loadTextField.text) {
                     "File not chosen" -> MoveBoxHandler.holdNextButtonOn = MoveBoxHandler.HoldValue(true, false)
                     else -> MoveBoxHandler.holdNextButtonOn = MoveBoxHandler.HoldValue(false, false)
