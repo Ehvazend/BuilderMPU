@@ -8,6 +8,9 @@ import javax.net.ssl.HttpsURLConnection
 
 object WebUtils {
     private fun startConnection(address: String) = (URL(address).openConnection() as HttpsURLConnection).run {
+        // Data for CurseMeta
+        setRequestProperty("User-Agent", "BuilderMPU")
+
         println("\nSending '$requestMethod' request to URL : $url\nResponse Code : $responseCode\n")
 
         try {
@@ -17,4 +20,3 @@ object WebUtils {
         }
     }!!
 }
-
