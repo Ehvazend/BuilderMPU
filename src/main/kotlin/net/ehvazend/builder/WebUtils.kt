@@ -19,4 +19,10 @@ object WebUtils {
             return@run ""
         }
     }!!
+
+    enum class FileType {
+        ALPHA,
+        BETA,
+        RELEASE
+    }
 }
