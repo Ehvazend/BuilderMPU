@@ -1,5 +1,6 @@
 package net.ehvazend.builder
 
+import com.typesafe.config.ConfigFactory
 import com.typesafe.config.ConfigList
 import com.typesafe.config.ConfigObject
 import com.typesafe.config.ConfigValue
@@ -22,6 +23,12 @@ object WebUtils {
             return@run ""
         }
     }!!
+
+    fun getMods() = ArrayList<PrimaryModData>().apply {
+        ConfigFactory.parseString(startConnection("https://cursemeta.dries007.net/mods.json")).root()!!.forEach {
+            this += PrimaryModData.fill(it)
+        }
+    }
 
     data class PrimaryModData(
         val id: Int,
