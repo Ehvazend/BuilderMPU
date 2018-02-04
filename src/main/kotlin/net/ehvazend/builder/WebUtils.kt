@@ -4,6 +4,7 @@ import com.typesafe.config.ConfigFactory
 import com.typesafe.config.ConfigList
 import com.typesafe.config.ConfigObject
 import com.typesafe.config.ConfigValue
+import net.ehvazend.builder.WebUtils.GameVersionData.Companion.FileType.*
 import java.io.BufferedReader
 import java.io.IOException
 import java.io.InputStreamReader
@@ -32,12 +33,12 @@ object WebUtils {
 
     data class PrimaryModData(
         val id: Int,
-        val gameVersionLatestFiles: ArrayList<GameVersionData>,
-        val primaryAuthorName: String,
-        val summary: String,
         val name: String,
+        val summary: String,
         val webSiteURL: URL,
-        val popularityScore: Double
+        val primaryAuthorName: String,
+        val popularityScore: Double,
+        val gameVersionLatestFiles: ArrayList<GameVersionData>
     ) {
         companion object {
             fun fill(value: Map.Entry<String, ConfigValue>): PrimaryModData {
@@ -46,21 +47,16 @@ object WebUtils {
 
                 return PrimaryModData(
                     id.toInt(),
+                    mod getString ("Name"),
+                    mod getString ("Summary"),
+                    mod getURL ("WebSiteURL").replaceBeforeLast("/", "https://minecraft.curseforge.com/projects"),
+                    mod getString ("PrimaryAuthorName"),
+                    mod getDouble ("PopularityScore"),
                     ArrayList<GameVersionData>().also { list ->
                         (mod["GameVersionLatestFiles"] as ConfigList).forEach {
                             list += GameVersionData.fill(it as ConfigObject)
                         }
-                    },
-                    mod["PrimaryAuthorName"]?.atKey("PrimaryAuthorName")?.getString("PrimaryAuthorName")!!,
-                    mod["Summary"]?.atKey("Summary")?.getString("Summary")!!,
-                    mod["Name"]?.atKey("Name")?.getString("Name")!!,
-                    URL(
-                        mod["WebSiteURL"]?.atKey("WebSiteURL")?.getString("WebSiteURL")!!.replaceBeforeLast(
-                            "/",
-                            "https://minecraft.curseforge.com/projects"
-                        )
-                    ),
-                    mod["PopularityScore"]?.atKey("PopularityScore")?.getDouble("PopularityScore")!!
+                    }
                 )
             }
         }
@@ -69,23 +65,32 @@ object WebUtils {
     data class GameVersionData(val fileType: FileType, val gameVersion: String, val projectFileID: Int) {
         companion object {
             fun fill(configObject: ConfigObject) = GameVersionData(
-                when (configObject["FileType"]?.atKey("FileType")?.getString("FileType")) {
-                    "alpha" -> FileType.ALPHA
-                    "beta" -> FileType.BETA
-                    "release" -> FileType.RELEASE
+                when (configObject getString ("FileType")) {
+                    "alpha" -> ALPHA
+                    "beta" -> BETA
+                    "release" -> RELEASE
 
                     else -> throw IllegalArgumentException("Unidentified type of FileType")
                 },
-                configObject["GameVesion"]?.atKey("GameVersion")?.getString("GameVersion")!!,
-                configObject["ProjectFileID"]?.atKey("ProjectFileID")?.getInt("ProjectFileID")!!
+
+                //Inside GameVersionLatestFiles, GameVesion is misspelled. This is a Curse typo.
+                configObject getString ("GameVesion"),
+                configObject getInt ("ProjectFileID")
             )
 
+            enum class FileType {
+                ALPHA,
+                BETA,
+                RELEASE
+            }
         }
     }
 
-    enum class FileType {
-        ALPHA,
-        BETA,
-        RELEASE
-    }
+    // Extension for refactor
+    private infix fun ConfigObject.getString(value: String) = this[value]?.atKey(value)?.getString(value)!!
+    private infix fun ConfigObject.getDouble(value: String) = (this getString (value)).toDouble()
+    private infix fun ConfigObject.getInt(value: String) = (this getString (value)).toInt()
+    private infix fun ConfigObject.getURL(value: String) = (this getString (value)).toURL()
+
+    private fun String.toURL() = URL(this)
 }
