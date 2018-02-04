@@ -4,7 +4,7 @@ import com.typesafe.config.ConfigFactory
 import com.typesafe.config.ConfigList
 import com.typesafe.config.ConfigObject
 import com.typesafe.config.ConfigValue
-import net.ehvazend.builder.WebUtils.GameVersionData.Companion.FileType.*
+import net.ehvazend.builder.WebUtils.GameVersionData.Companion.FileBranch.*
 import java.io.BufferedReader
 import java.io.IOException
 import java.io.InputStreamReader
@@ -35,10 +35,10 @@ object WebUtils {
         val id: Int,
         val name: String,
         val summary: String,
-        val webSiteURL: URL,
-        val primaryAuthorName: String,
+        val url: URL,
+        val authorName: String,
         val popularityScore: Double,
-        val gameVersionLatestFiles: ArrayList<GameVersionData>
+        val gameVersionFiles: ArrayList<GameVersionData>
     ) {
         companion object {
             fun fill(value: Map.Entry<String, ConfigValue>): PrimaryModData {
@@ -49,7 +49,7 @@ object WebUtils {
                     id.toInt(),
                     mod getString ("Name"),
                     mod getString ("Summary"),
-                    mod getURL ("WebSiteURL").replaceBeforeLast("/", "https://minecraft.curseforge.com/projects"),
+                    mod getURL ("WebSiteURL").replaceBeforeLast("/", ""),
                     mod getString ("PrimaryAuthorName"),
                     mod getDouble ("PopularityScore"),
                     ArrayList<GameVersionData>().also { list ->
@@ -62,7 +62,7 @@ object WebUtils {
         }
     }
 
-    data class GameVersionData(val fileType: FileType, val gameVersion: String, val projectFileID: Int) {
+    data class GameVersionData(val fileType: FileBranch, val gameVersion: String, val projectFileID: Int) {
         companion object {
             fun fill(configObject: ConfigObject) = GameVersionData(
                 when (configObject getString ("FileType")) {
@@ -70,7 +70,7 @@ object WebUtils {
                     "beta" -> BETA
                     "release" -> RELEASE
 
-                    else -> throw IllegalArgumentException("Unidentified type of FileType")
+                    else -> throw IllegalArgumentException("Unidentified type of FileBranch")
                 },
 
                 //Inside GameVersionLatestFiles, GameVesion is misspelled. This is a Curse typo.
@@ -78,7 +78,7 @@ object WebUtils {
                 configObject getInt ("ProjectFileID")
             )
 
-            enum class FileType {
+            enum class FileBranch {
                 ALPHA,
                 BETA,
                 RELEASE
