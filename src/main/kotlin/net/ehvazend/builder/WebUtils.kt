@@ -1,6 +1,8 @@
 package net.ehvazend.builder
 
+import com.typesafe.config.ConfigList
 import com.typesafe.config.ConfigObject
+import com.typesafe.config.ConfigValue
 import java.io.BufferedReader
 import java.io.IOException
 import java.io.InputStreamReader
@@ -20,6 +22,42 @@ object WebUtils {
             return@run ""
         }
     }!!
+
+    data class PrimaryModData(
+        val id: Int,
+        val gameVersionLatestFiles: ArrayList<GameVersionData>,
+        val primaryAuthorName: String,
+        val summary: String,
+        val name: String,
+        val webSiteURL: URL,
+        val popularityScore: Double
+    ) {
+        companion object {
+            fun fill(value: Map.Entry<String, ConfigValue>): PrimaryModData {
+                val (id, mod) = value
+                mod as ConfigObject
+
+                return PrimaryModData(
+                    id.toInt(),
+                    ArrayList<GameVersionData>().also { list ->
+                        (mod["GameVersionLatestFiles"] as ConfigList).forEach {
+                            list += GameVersionData.fill(it as ConfigObject)
+                        }
+                    },
+                    mod["PrimaryAuthorName"]?.atKey("PrimaryAuthorName")?.getString("PrimaryAuthorName")!!,
+                    mod["Summary"]?.atKey("Summary")?.getString("Summary")!!,
+                    mod["Name"]?.atKey("Name")?.getString("Name")!!,
+                    URL(
+                        mod["WebSiteURL"]?.atKey("WebSiteURL")?.getString("WebSiteURL")!!.replaceBeforeLast(
+                            "/",
+                            "https://minecraft.curseforge.com/projects"
+                        )
+                    ),
+                    mod["PopularityScore"]?.atKey("PopularityScore")?.getDouble("PopularityScore")!!
+                )
+            }
+        }
+    }
 
     data class GameVersionData(val fileType: FileType, val gameVersion: String, val projectFileID: Int) {
         companion object {
