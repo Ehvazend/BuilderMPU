@@ -8,6 +8,7 @@ import javafx.scene.layout.HBox
 import javafx.scene.layout.Pane
 import javafx.scene.layout.VBox
 import net.ehvazend.graphics.getRoot
+import net.ehvazend.graphics.handlers.AnimationHandler.Effect.enable
 import net.ehvazend.graphics.interfaces.Panel
 import net.ehvazend.graphics.interfaces.Slide
 import java.util.*
@@ -37,7 +38,7 @@ object Process : Panel {
                     value as AnchorPane
                     val progressBar = value.children[0] as ProgressBar
 
-                    when(progressBar.id) {
+                    when (progressBar.id) {
                         "starting" -> startingProgressBar = progressBar
                         "loading" -> loadingProgressBar = progressBar
                         "processing" -> processingProgressBar = progressBar
@@ -88,4 +89,41 @@ object Process : Panel {
 //            }
 //        }
 //    }
+
+    private object PBHandler {
+        private var currentPB = startingProgressBar
+        private val listPB: ArrayList<ProgressBar> = arrayListOf(
+            startingProgressBar,
+            loadingProgressBar,
+            processingProgressBar,
+            cleaningProgressBar
+        )
+
+        fun nextPB() {
+            setReady()
+
+            val currentID = listPB.indexOf(currentPB)
+
+            if (currentID < listPB.size -1) {
+                currentPB = listPB[currentID + 1]
+                setWait()
+            } else println("End of progress bars")
+        }
+
+        fun setReady() {
+            currentPB.progress = 1.0
+        }
+
+        fun setWait() {
+            currentPB.apply {
+                enable()
+                progress = ProgressBar.INDETERMINATE_PROGRESS
+            }
+        }
+
+        fun setError() {
+            setReady()
+            currentPB.styleClass += "errorGradient"
+        }
+    }
 }

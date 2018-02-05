@@ -23,10 +23,18 @@
     -fx-background-color: linear-gradient(to top, #efefef, #d9d9d9);
 }
 
+.progress-bar > .bar {
+    -fx-background-color: #323232;
+}
+
 .progress-bar:indeterminate > .bar {
     -fx-background-color: linear-gradient(to right, #323232, rgba(0,0,0,0));
 }
 
 .error > .bar {
     -fx-background-color: rgba(170, 53, 61, 0.81);
+}
+
+.errorGradient > .bar {
+    -fx-background-color: linear-gradient(to right, #323232, rgba(170, 53, 61, 0.81));
 }
