@@ -2,7 +2,10 @@ package net.ehvazend.builder.panels
 
 import javafx.application.Platform
 import javafx.scene.Node
+import javafx.scene.control.ProgressBar
+import javafx.scene.layout.AnchorPane
 import javafx.scene.layout.HBox
+import javafx.scene.layout.Pane
 import javafx.scene.layout.VBox
 import net.ehvazend.graphics.getRoot
 import net.ehvazend.graphics.interfaces.Panel
@@ -12,32 +15,77 @@ import java.util.*
 object Process : Panel {
     override val id = "Process"
 
-    override val header: Node = HBox()
+    override val header: HBox by lazy {
+        getRoot<HBox>("/assets/FXML/process/Header.fxml")
+    }
 
-    override val body: Node by lazy { fillBody() }
+    override val body: Pane by lazy { loadDefaultSlide() }
 
     override val slides: HashMap<String, Slide>
         get() = HashMap<String, Slide>().also {
-            it["test"] = test
+            it["load"] = load
+            it["data"] = data
         }
 
-    override val defaultSlide: Slide by lazy { test }
-    override lateinit var currentSlide: Slide
+    override val defaultSlide: Slide by lazy { load }
+    override var currentSlide: Slide? = null
 
-    private val test: Slide by lazy {
+    private val load: Slide = object : Slide {
+        override val body: Pane = getRoot<AnchorPane>("/assets/FXML/process/Load.fxml").apply {
+            Platform.runLater {
+                fun setProgressBar(value: Node) {
+                    value as AnchorPane
+                    val progressBar = value.children[0] as ProgressBar
+
+                    when(progressBar.id) {
+                        "starting" -> startingProgressBar = progressBar
+                        "loading" -> loadingProgressBar = progressBar
+                        "processing" -> processingProgressBar = progressBar
+                        "cleaning" -> cleaningProgressBar = progressBar
+                    }
+                }
+
+                (children[0] as HBox).children.forEach { setProgressBar(it) }
+            }
+        }
+
+        override val source: Panel = this@Process
+    }
+
+
+    lateinit var startingProgressBar: ProgressBar
+    lateinit var loadingProgressBar: ProgressBar
+    lateinit var processingProgressBar: ProgressBar
+    lateinit var cleaningProgressBar: ProgressBar
+
+    private val data: Slide by lazy {
         object : Slide {
-            override val body: Node = getRoot<VBox>("/assets/FXML/init/Create.fxml")
+            override val body: Pane = getRoot<VBox>("/assets/FXML/process/Data.fxml")
 
             override val source: Panel = this@Process
         }
     }
 
     init {
-        Platform.runLater {
-            when (Init.currentSlide) {
-                Init.create -> Unit
-                Init.load -> Unit
-            }
-        }
+        ProgressBar()
     }
+
+//    override val setOnLoadPanel = {
+//        when (Init.currentSlide) {
+//            Init.slides["create"] -> {
+////                Slide.unload(currentSlide!!)
+////                Slide.load(build)
+//            }
+//
+//            Init.slides["load"] -> {
+//                thread {
+////                    println(Loader.getPacks(File(Init.loadTextField.text).toURI()))
+////                    WebUtils.getMods(startConnection("https://cursemeta.dries007.net/mods.json"))
+//                }
+//                Unit
+////                Slide.unload(currentSlide!!)
+////                Slide.load(defaultSlide)
+//            }
+//        }
+//    }
 }

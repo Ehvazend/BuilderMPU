@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<?import javafx.scene.control.ProgressBar?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Text?>
+<AnchorPane maxWidth="-Infinity" minWidth="-Infinity" prefHeight="0.0" prefWidth="572.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <HBox AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+         <children>
+            <AnchorPane HBox.hgrow="ALWAYS">
+               <children>
+                  <ProgressBar fx:id="starting" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
+               </children>
+            </AnchorPane>
+            <AnchorPane HBox.hgrow="ALWAYS">
+               <children>
+                  <ProgressBar fx:id="loading" disable="true" progress="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
+               </children>
+            </AnchorPane>
+            <AnchorPane HBox.hgrow="ALWAYS">
+               <children>
+                  <ProgressBar fx:id="processing" disable="true" progress="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
+               </children>
+            </AnchorPane>
+            <AnchorPane HBox.hgrow="ALWAYS">
+               <children>
+                  <ProgressBar fx:id="cleaning" disable="true" progress="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
+               </children>
+            </AnchorPane>
+         </children>
+      </HBox>
+      <Text layoutY="40.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Reading configuration file" textAlignment="CENTER" wrappingWidth="572.0" />
+   </children>
+</AnchorPane>

@@ -12,7 +12,7 @@ import java.net.URL
 import javax.net.ssl.HttpsURLConnection
 
 object WebUtils {
-    private fun startConnection(address: String) = (URL(address).openConnection() as HttpsURLConnection).run {
+    fun startConnection(address: String) = (URL(address).openConnection() as HttpsURLConnection).run {
         // Data for CurseMeta
         setRequestProperty("User-Agent", "BuilderMPU")
 
@@ -25,8 +25,8 @@ object WebUtils {
         }
     }!!
 
-    fun getMods() = ArrayList<PrimaryModData>().apply {
-        ConfigFactory.parseString(startConnection("https://cursemeta.dries007.net/mods.json")).root()!!.forEach {
+    fun getMods(value: String) = ArrayList<PrimaryModData>().apply {
+        ConfigFactory.parseString(value).root()!!.forEach {
             this += PrimaryModData.fill(it)
         }
     }
@@ -88,6 +88,7 @@ object WebUtils {
 
     // Extension for refactor
     private infix fun ConfigObject.getString(value: String) = this[value]?.atKey(value)?.getString(value)!!
+
     private infix fun ConfigObject.getDouble(value: String) = (this getString (value)).toDouble()
     private infix fun ConfigObject.getInt(value: String) = (this getString (value)).toInt()
     private infix fun ConfigObject.getURL(value: String) = (this getString (value)).toURL()
