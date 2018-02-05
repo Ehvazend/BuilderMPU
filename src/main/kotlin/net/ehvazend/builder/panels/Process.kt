@@ -121,21 +121,25 @@ object Process : Panel {
         fun nextPB() {
             setReady()
 
-            val currentID = listPB.indexOf(currentPB)
+            Platform.runLater {
+                val currentID = listPB.indexOf(currentPB)
 
-            if (currentID < listPB.size - 1) {
-                currentPB = listPB[currentID + 1]
-                setWait()
-            } else println("End of progress bars")
+                if (currentID < listPB.size - 1) {
+                    currentPB = listPB[currentID + 1]
+                    setWait()
+                }
+            }
         }
 
         fun setFirst() {
             listPB.forEach {
-                it.isDisable = true
-                Platform.runLater { it.progress = 0.0 }
+                Platform.runLater {
+                    it.isDisable = true
+                    it.progress = 0.0
+                }
             }
 
-            currentPB = listPB[0]
+            currentPB = listPB.first()
             setWait()
         }
 
