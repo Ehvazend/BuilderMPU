@@ -13,3 +13,20 @@
 .button {
     -fx-cursor: HAND;
 }
+
+.progress-bar {
+    -fx-indeterminate-bar-flip: false;
+    -fx-indeterminate-bar-length: 143;
+}
+
+.progress-bar > .track {
+    -fx-background-color: linear-gradient(to top, #efefef, #d9d9d9);
+}
+
+.progress-bar:indeterminate > .bar {
+    -fx-background-color: linear-gradient(to right, #323232, rgba(0,0,0,0));
+}
+
+.error > .bar {
+    -fx-background-color: rgba(170, 53, 61, 0.81);
+}
