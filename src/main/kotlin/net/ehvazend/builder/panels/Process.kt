@@ -3,15 +3,19 @@ package net.ehvazend.builder.panels
 import javafx.application.Platform
 import javafx.scene.Node
 import javafx.scene.control.ProgressBar
+import javafx.scene.control.ProgressBar.INDETERMINATE_PROGRESS
 import javafx.scene.layout.AnchorPane
 import javafx.scene.layout.HBox
 import javafx.scene.layout.Pane
 import javafx.scene.layout.VBox
+import net.ehvazend.builder.Loader
 import net.ehvazend.graphics.getRoot
 import net.ehvazend.graphics.handlers.AnimationHandler.Effect.enable
 import net.ehvazend.graphics.interfaces.Panel
 import net.ehvazend.graphics.interfaces.Slide
+import java.io.File
 import java.util.*
+import kotlin.concurrent.thread
 
 object Process : Panel {
     override val id = "Process"
@@ -71,27 +75,42 @@ object Process : Panel {
         ProgressBar()
     }
 
-//    override val setOnLoadPanel = {
-//        when (Init.currentSlide) {
-//            Init.slides["create"] -> {
-////                Slide.unload(currentSlide!!)
-////                Slide.load(build)
-//            }
-//
-//            Init.slides["load"] -> {
-//                thread {
-////                    println(Loader.getPacks(File(Init.loadTextField.text).toURI()))
-////                    WebUtils.getMods(startConnection("https://cursemeta.dries007.net/mods.json"))
-//                }
-//                Unit
-////                Slide.unload(currentSlide!!)
-////                Slide.load(defaultSlide)
-//            }
-//        }
-//    }
+    override val setOnLoadPanel = {
+        when (Init.currentSlide) {
+            Init.slides["create"] -> {
+//                Slide.unload(currentSlide!!)
+//                Slide.load(build)
+            }
+
+            Init.slides["load"] -> {
+                thread {
+                    if (afterLoad()) PBHandler.nextPB() else PBHandler.setError()
+
+//                    WebUtils.getMods(startConnection("https://cursemeta.dries007.net/mods.json"))
+                }
+                Unit
+//                Slide.unload(currentSlide!!)
+//                Slide.load(defaultSlide)
+            }
+        }
+    }
+
+    fun afterLoad(): Boolean {
+        PBHandler.setFirst()
+
+        try {
+            Loader.getPacks(File(Init.loadTextField.text).toURI())
+        } catch (e: Exception) {
+            return false
+        }
+
+        return true
+    }
 
     private object PBHandler {
         private var currentPB = startingProgressBar
+            set(value) = Platform.runLater { field = value }
+
         private val listPB: ArrayList<ProgressBar> = arrayListOf(
             startingProgressBar,
             loadingProgressBar,
@@ -104,26 +123,36 @@ object Process : Panel {
 
             val currentID = listPB.indexOf(currentPB)
 
-            if (currentID < listPB.size -1) {
+            if (currentID < listPB.size - 1) {
                 currentPB = listPB[currentID + 1]
                 setWait()
             } else println("End of progress bars")
         }
 
+        fun setFirst() {
+            listPB.forEach {
+                it.isDisable = true
+                Platform.runLater { it.progress = 0.0 }
+            }
+
+            currentPB = listPB[0]
+            setWait()
+        }
+
         fun setReady() {
-            currentPB.progress = 1.0
+            Platform.runLater { currentPB.progress = 1.0 }
         }
 
         fun setWait() {
-            currentPB.apply {
-                enable()
-                progress = ProgressBar.INDETERMINATE_PROGRESS
+            Platform.runLater {
+                currentPB.enable()
+                currentPB.progress = INDETERMINATE_PROGRESS
             }
         }
 
         fun setError() {
             setReady()
-            currentPB.styleClass += "errorGradient"
+            Platform.runLater { currentPB.styleClass += "error" }
         }
     }
 }
