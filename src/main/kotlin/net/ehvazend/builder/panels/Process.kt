@@ -9,6 +9,10 @@ import javafx.scene.layout.HBox
 import javafx.scene.layout.Pane
 import javafx.scene.layout.VBox
 import net.ehvazend.builder.Loader
+import net.ehvazend.builder.WebUtils
+import net.ehvazend.builder.WebUtils.filterMods
+import net.ehvazend.builder.WebUtils.getMods
+import net.ehvazend.builder.WebUtils.startConnection
 import net.ehvazend.graphics.getRoot
 import net.ehvazend.graphics.handlers.AnimationHandler.Effect.enable
 import net.ehvazend.graphics.interfaces.Panel
@@ -46,7 +50,7 @@ object Process : Panel {
                         "starting" -> startingProgressBar = progressBar
                         "loading" -> loadingProgressBar = progressBar
                         "processing" -> processingProgressBar = progressBar
-                        "cleaning" -> cleaningProgressBar = progressBar
+                        "filtering" -> filteringProgressBar = progressBar
                     }
                 }
 
@@ -61,7 +65,7 @@ object Process : Panel {
     lateinit var startingProgressBar: ProgressBar
     lateinit var loadingProgressBar: ProgressBar
     lateinit var processingProgressBar: ProgressBar
-    lateinit var cleaningProgressBar: ProgressBar
+    lateinit var filteringProgressBar: ProgressBar
 
     private val data: Slide by lazy {
         object : Slide {
@@ -75,28 +79,35 @@ object Process : Panel {
         ProgressBar()
     }
 
-    override val setOnLoadPanel = {
+    override val setOnLoadPanel: () -> Unit = {
         when (Init.currentSlide) {
             Init.slides["create"] -> {
-//                Slide.unload(currentSlide!!)
-//                Slide.load(build)
+                thread {
+                    if (!afterCreate()) PBHandler.setError() else {
+                        PBHandler.nextPB()
+                        loadBD()
+                    }
+                }
             }
 
             Init.slides["load"] -> {
                 thread {
-                    if (afterLoad()) PBHandler.nextPB() else PBHandler.setError()
-
-//                    WebUtils.getMods(startConnection("https://cursemeta.dries007.net/mods.json"))
+                    if (!afterLoad()) PBHandler.setError() else {
+                        PBHandler.nextPB()
+                        loadBD()
+                    }
                 }
-                Unit
-//                Slide.unload(currentSlide!!)
-//                Slide.load(defaultSlide)
             }
         }
     }
 
+    fun afterCreate(): Boolean {
+        PBHandler.refresh()
+        return true
+    }
+
     fun afterLoad(): Boolean {
-        PBHandler.setFirst()
+        PBHandler.refresh()
 
         try {
             Loader.getPacks(File(Init.loadTextField.text).toURI())
@@ -107,16 +118,38 @@ object Process : Panel {
         return true
     }
 
-    private object PBHandler {
-        private var currentPB = startingProgressBar
-            set(value) = Platform.runLater { field = value }
+    fun loadBD() {
+        val connection: String by lazy { startConnection("https://cursemeta.dries007.net/mods.json") }
+        val getMods: ArrayList<WebUtils.PrimaryModData> by lazy { getMods(connection) }
+        val listMods: List<WebUtils.PrimaryModData> by lazy { filterMods(getMods) }
 
+        if (connection != "") PBHandler.nextPB() else PBHandler.setError()
+        if (getMods.isNotEmpty()) PBHandler.nextPB() else PBHandler.setError()
+        if (listMods.isNotEmpty()) PBHandler.nextPB() else PBHandler.setError()
+    }
+
+    private object PBHandler {
         private val listPB: ArrayList<ProgressBar> = arrayListOf(
             startingProgressBar,
             loadingProgressBar,
             processingProgressBar,
-            cleaningProgressBar
+            filteringProgressBar
         )
+
+        private var currentPB = listPB[0]
+            set(value) = Platform.runLater { field = value }
+
+        fun refresh() {
+            listPB.forEach {
+                Platform.runLater {
+                    it.isDisable = true
+                    it.progress = 0.0
+                }
+            }
+
+            currentPB = listPB[0]
+            setWait()
+        }
 
         fun nextPB() {
             setReady()
@@ -129,18 +162,6 @@ object Process : Panel {
                     setWait()
                 }
             }
-        }
-
-        fun setFirst() {
-            listPB.forEach {
-                Platform.runLater {
-                    it.isDisable = true
-                    it.progress = 0.0
-                }
-            }
-
-            currentPB = listPB.first()
-            setWait()
         }
 
         fun setReady() {

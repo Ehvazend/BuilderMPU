@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-
 <?import javafx.scene.control.ProgressBar?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Text?>
@@ -25,7 +24,7 @@
             </AnchorPane>
             <AnchorPane HBox.hgrow="ALWAYS">
                <children>
-                  <ProgressBar fx:id="cleaning" disable="true" progress="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
+                  <ProgressBar fx:id="filtering" disable="true" progress="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
                </children>
             </AnchorPane>
          </children>

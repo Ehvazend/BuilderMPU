@@ -31,6 +31,10 @@ object WebUtils {
         }
     }
 
+    fun filterMods(mods: ArrayList<PrimaryModData>): List<PrimaryModData> {
+        return mods.filter { it.gameVersionFiles.isNotEmpty() }
+    }
+
     data class PrimaryModData(
         val id: Int,
         val name: String,
