@@ -9,7 +9,7 @@
          <children>
             <AnchorPane HBox.hgrow="ALWAYS">
                <children>
-                  <ProgressBar fx:id="starting" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
+                  <ProgressBar fx:id="starting" disable="true" progress="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
                </children>
             </AnchorPane>
             <AnchorPane HBox.hgrow="ALWAYS">
