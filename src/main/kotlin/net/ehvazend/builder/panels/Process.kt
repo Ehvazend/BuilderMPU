@@ -13,10 +13,10 @@ import net.ehvazend.builder.WebUtils.PrimaryModData
 import net.ehvazend.builder.WebUtils.filterMods
 import net.ehvazend.builder.WebUtils.getPrimaryModData
 import net.ehvazend.builder.WebUtils.startConnection
-import net.ehvazend.builder.panels.handlers.PBHandler
-import net.ehvazend.builder.panels.handlers.PBHandler.State.ERROR
-import net.ehvazend.builder.panels.handlers.PBHandler.State.READY
 import net.ehvazend.graphics.getRoot
+import net.ehvazend.graphics.handlers.PBHandler
+import net.ehvazend.graphics.handlers.PBHandler.State.ERROR
+import net.ehvazend.graphics.handlers.PBHandler.State.READY
 import net.ehvazend.graphics.interfaces.Panel
 import net.ehvazend.graphics.interfaces.Slide
 import java.io.File
