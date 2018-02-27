@@ -70,7 +70,7 @@ object PBHandler {
             INACTIVE -> setState()
             WAIT -> setState()
             READY -> with(listPB.indexOf(currentPB)) {
-                if (this <= listPB.size - 1) {
+                if (this <= listPB.size - 1 && currentPB!!.state != ERROR) {
                     setState()
 
                     // Increment current Progress Bar

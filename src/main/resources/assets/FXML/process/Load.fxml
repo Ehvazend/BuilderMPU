@@ -29,6 +29,6 @@
             </AnchorPane>
          </children>
       </HBox>
-      <Text layoutY="40.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Reading configuration file" textAlignment="CENTER" wrappingWidth="572.0" />
+      <Text layoutY="40.0" strokeType="OUTSIDE" strokeWidth="0.0" textAlignment="CENTER" wrappingWidth="572.0" />
    </children>
 </AnchorPane>

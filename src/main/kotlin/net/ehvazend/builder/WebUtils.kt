@@ -25,7 +25,7 @@ object WebUtils {
         }
     }!!
 
-    fun getMods(value: String) = ArrayList<PrimaryModData>().apply {
+    fun getPrimaryModData(value: String) = ArrayList<PrimaryModData>().apply {
         ConfigFactory.parseString(value).root()!!.forEach {
             this += PrimaryModData.fill(it)
         }

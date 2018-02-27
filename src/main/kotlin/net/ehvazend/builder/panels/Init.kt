@@ -114,13 +114,14 @@ object Init : Panel {
                 }
             }
 
-            lateinit var nameTextField: TextField
             lateinit var nameDescriptionTextField: TextField
-            lateinit var createTextField: TextField
 
             override val source = this@Init
         }
     }
+
+    lateinit var createTextField: TextField
+    lateinit var nameTextField: TextField
 
     private var createHoldOn = true
         set(value) {
